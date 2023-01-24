@@ -17,12 +17,12 @@ export interface PantryItem {
 }
 
 export const addItem = async (item: PantryItem) => {
-  // await set(ref(db, `${auth.currentUser}` + "/pantry/" + Date.now()), {
-  //   // name : item.name,
-  //   expiry: item.expiry,
-  //   category : item.category,
-  //   quantity : item.quantity,
-  //   unit : item.unit,
-  //   item_id:item.item_id
-  // });
+  await set(ref(db, `${auth.currentUser!.uid}` + "/pantry/" + Date.now()), {
+    // name : item.name,
+    expiry: item.expiry,
+    category : item.category,
+    quantity : item.quantity,
+    unit : item.unit,
+    item_id:item.item_id
+  });
 };

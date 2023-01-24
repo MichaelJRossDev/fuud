@@ -3,7 +3,7 @@ import { get, ref, getDatabase, child } from "firebase/database";
 import { app, db, auth } from "../config/firebaseConfig";
 import { signIn } from "../src/users";
 
-describe.only("Add item", () => {
+describe("Add item", () => {
   test("Should add items to the Pantry", async () => {
     const item: pantry.PantryItem = {
       name: "banana",
@@ -13,16 +13,15 @@ describe.only("Add item", () => {
       unit: "units",
       item_id: Date.now(),
     };
-    signIn("michaeljrossdev@gmail.com", "password");
+    await signIn("michaeljrossdev@gmail.com", "password");
 
     await pantry.addItem({ ...item });
     const dbRef = ref(db);
 
-    get(child(dbRef, `${auth.currentUser}` + "/pantry/" + item.item_id)).then(
-      snapshot => {
-        const dbItem = snapshot.val();
-        expect(dbItem).toEqual(item);
-      }
-    );
+   await get(child(dbRef, `${auth.currentUser!.uid}` + "/pantry/" + item.item_id))
+      .then((snapshot) => {
+        const dbItem = snapshot.val()
+        expect(dbItem).toEqual(item)
+      })
   });
 });
