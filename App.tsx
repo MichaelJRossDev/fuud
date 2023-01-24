@@ -5,10 +5,10 @@ import React, { useState } from "react";
 import LogIn from "./components/Login"
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   if (loggedIn === false) {
-    return <LogIn />;
+    return <LogIn setLoggedIn={setLoggedIn} />;
   } else {
     return (
       <View>

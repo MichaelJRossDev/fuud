@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import CreateAcc from "./CreateAcc"
+import {signIn} from "../src/users"
 
-export default function LogIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [createAcc, setCreateAcc] = useState(false)
+export default function LogIn({setLoggedIn}) {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [createAcc, setCreateAcc] = useState<boolean>(false);
 
   if(createAcc === true) {
-    return <CreateAcc />
+    return <CreateAcc setCreateAcc={setCreateAcc}/>
   }
   return (
     <View style={styles.container}>
@@ -38,11 +39,17 @@ export default function LogIn() {
       </TouchableOpacity>
 
     
-      <TouchableOpacity onPress={() => {console.log("Im Logging in!")}} style={styles.loginBtn}>
-      <Text style={styles.loginText}> Log In</Text>
-      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {
+        signIn(email, password)
+        console.log("Im Logging in!")
+        setLoggedIn(true)}} 
+        style={styles.loginBtn}>
+          <Text style={styles.loginText}> Log In</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => {setCreateAcc(true)}} style={styles.loginBtn}>
+      <TouchableOpacity onPress={() => {
+        setCreateAcc(true)}} 
+        style={styles.loginBtn}>
       <Text style={styles.loginText}> Create Account</Text>
       </TouchableOpacity>
           </View>
