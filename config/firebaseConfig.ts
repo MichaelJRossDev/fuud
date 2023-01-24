@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
-
 import { getDatabase, set, ref } from "firebase/database";
+import { getAuth } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -12,7 +12,7 @@ import { getDatabase, set, ref } from "firebase/database";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyCKOUPUBB8pgVuHi1_p1oW-2emVi0AAsMg",
 
   authDomain: "fuud-34a91.firebaseapp.com",
@@ -33,8 +33,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 
-const app = initializeApp(firebaseConfig);
-
-const db = getDatabase(app);
-
-
+export const app = initializeApp(firebaseConfig);
+export const db = getDatabase(app);
+export const auth = getAuth(app);
