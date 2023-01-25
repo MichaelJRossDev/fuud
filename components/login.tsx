@@ -102,4 +102,5 @@ const styles = StyleSheet.create({
   loginText: {
     color: "#f5f6f4",
   },
+  
 });
