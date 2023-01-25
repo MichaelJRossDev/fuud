@@ -32,7 +32,7 @@ describe("Add item", () => {
 
     await get(
       child(dbRef, `${auth.currentUser!.uid}` + "/pantry/" + item.item_id)
-    ).then(snapshot => {
+    ).then((snapshot) => {
       const dbItem = snapshot.val();
 
       expect(dbItem).toEqual(item);

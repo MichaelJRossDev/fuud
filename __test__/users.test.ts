@@ -31,10 +31,10 @@ describe("Create User", () => {
   });
 });
 
-describe("Sing in user", () => {
+describe("Sign in user", () => {
   test("should sign in user", async () => {
     await users.signOutUser()
-    await users.logInUser("michaeljrossdev@gmail.com", "password");
+    await users.signIn("michaeljrossdev@gmail.com", "password");
       expect(auth.currentUser!.email).toBe("michaeljrossdev@gmail.com");
   });
 });
