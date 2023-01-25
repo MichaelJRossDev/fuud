@@ -5,7 +5,7 @@ import {
 } from "firebase/auth";
 import { app, db, auth } from "../config/firebaseConfig";
 
-import { set, ref } from "firebase/database";
+import { set, ref, get, child } from "firebase/database";
 
 export interface PantryItem {
   name: string;
@@ -17,17 +17,31 @@ export interface PantryItem {
 }
 
 export const addItem = async (item: PantryItem) => {
-  const item_id = item.item_id ? item.item_id : Number(Date.now())
+  const item_id = item.item_id ? item.item_id : Number(Date.now());
   await set(ref(db, `${auth.currentUser!.uid}` + "/pantry/" + item_id), {
-    name : item.name,
+    name: item.name,
     expiry: item.expiry,
-    category : item.category,
-    quantity : item.quantity,
-    unit : item.unit,
-    item_id: item_id
+    category: item.category,
+    quantity: item.quantity,
+    unit: item.unit,
+    item_id: item_id,
   });
 };
 
 export const emptyPantry = async () => {
   await set(ref(db, `${auth.currentUser!.uid}/pantry`), null);
-}
+};
+
+export const getPantry = async () => {
+  let pantryItems = {};
+  await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/"))
+    .then(snapshot => snapshot.val())
+    .then(data => {
+      pantryItems = data;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+  return pantryItems;
+};

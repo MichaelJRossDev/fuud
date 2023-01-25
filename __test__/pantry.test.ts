@@ -52,9 +52,9 @@ describe("Add item", () => {
     await pantry.addItem({ ...item });
 
     await get(child(dbRef, `${auth.currentUser!.uid}` + "/pantry/"))
-      .then((snapshot) => snapshot.val())
-      .then((data) => Object.values(data)[0])
-      .then((object) => {
+      .then(snapshot => snapshot.val())
+      .then(data => Object.values(data)[0])
+      .then(object => {
         expect(object).toMatchObject({
           name: "pineapple",
           expiry: Number(new Date(2024, 1, 1)),
@@ -82,9 +82,40 @@ describe("emptyPantry", () => {
     pantry.emptyPantry();
     const dbRef = ref(db);
     await get(child(dbRef, `${auth.currentUser!.uid}` + "/pantry/"))
-      .then((snapshot) => snapshot.val())
-      .then((data) => {
+      .then(snapshot => snapshot.val())
+      .then(data => {
         expect(data).toEqual(null);
       });
+  });
+});
+
+describe("getPantry", () => {
+  test("gets all items from pantry", async () => {
+    for (let i = 0; i < 5; i++) {
+      await pantry.addItem({
+        name: i.toString(),
+        expiry: Number(new Date(2024, 1, i)),
+        category: (i * 2).toString(),
+        quantity: i * 3,
+        unit: "Lightyears",
+        item_id: Number(Date.now()),
+      });
+    }
+    // const list = await pantry.getPantry();
+    const pantryItems = await pantry.getPantry();
+    const values = Object.values(pantryItems);
+    expect(values).toHaveLength(5);
+    expect(values).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: expect.any(String),
+          expiry: expect.any(Number),
+          category: expect.any(String),
+          quantity: expect.any(Number),
+          unit: expect.any(String),
+          item_id: expect.any(Number),
+        }),
+      ])
+    );
   });
 });
