@@ -66,3 +66,25 @@ describe("Add item", () => {
       });
   });
 });
+
+describe("emptyPantry", () => {
+  test("pantry is emptied", async () => {
+    for (let i = 0; i < 5; i++) {
+      pantry.addItem({
+        name: i.toString(),
+        expiry: Number(new Date(2024, 1, i)),
+        category: (i * 2).toString(),
+        quantity: i * 3,
+        unit: "Lightyears",
+        item_id: Number(Date.now()),
+      });
+    }
+    pantry.emptyPantry();
+    const dbRef = ref(db);
+    await get(child(dbRef, `${auth.currentUser!.uid}` + "/pantry/"))
+      .then((snapshot) => snapshot.val())
+      .then((data) => {
+        expect(data).toEqual(null);
+      });
+  });
+});
