@@ -27,3 +27,7 @@ export const addItem = async (item: PantryItem) => {
     item_id: item_id
   });
 };
+
+export const emptyPantry = async () => {
+  await set(ref(db, `${auth.currentUser!.uid}/pantry`), null);
+}
