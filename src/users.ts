@@ -14,11 +14,11 @@ export const signIn = async (email: string, password: string) => {
 export const createUser = async (email: string, password: string) => {
   return await createUserWithEmailAndPassword(auth, email, password)
     .then(() => console.log("User created"))
-    .catch((err) => console.log("Error during user creation"));
+    .catch((err) => console.log("Error during user creation:", err));
 };
 
 export const signOutUser = async () => {
   await signOut(auth)
     .then(() => console.log("User signed out successfully"))
-    .catch((err) => console.log(err));
+    .catch((err) => console.log("Error signing out:", err));
 };
