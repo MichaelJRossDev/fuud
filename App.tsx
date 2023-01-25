@@ -2,11 +2,11 @@ import { StatusBar } from "expo-status-bar";
 import {StyleSheet, Text, View, TextInput, TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import LogIn from "./components/login"
+import LogIn from "./components/Login"
 import Homepage from "./components/Homepage";
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(true);
 
   if (loggedIn === false) {
     return <LogIn setLoggedIn={setLoggedIn} />;
