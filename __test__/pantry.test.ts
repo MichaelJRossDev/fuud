@@ -119,3 +119,34 @@ describe("getPantry", () => {
     );
   });
 });
+
+describe('deleteItemById', () => {
+  test('should delete item by ID', async () => {
+    const item1: pantry.PantryItem = {
+      name: "pineapple",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "Fruit",
+      quantity: 5,
+      unit: "units",
+      item_id: 42
+    }
+
+    const item2: pantry.PantryItem = {
+      name: "pineapple",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "Fruit",
+      quantity: 5,
+      unit: "units",
+      item_id: 43
+    }
+
+    await pantry.addItem(item1)
+    await pantry.addItem(item2)
+    pantry.deleteItemById(42)
+
+    const pantryKeys:Array<string> = Object.keys(await pantry.getPantry());
+    
+    expect(pantryKeys).toHaveLength(1)
+    expect(pantryKeys).not.toContain("42")
+  });
+});

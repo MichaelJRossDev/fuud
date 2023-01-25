@@ -45,3 +45,7 @@ export const getPantry = async () => {
 
   return pantryItems;
 };
+
+export const deleteItemById = async (id:number) => {
+  await set(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), null)
+}
