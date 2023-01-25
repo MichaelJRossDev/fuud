@@ -11,7 +11,7 @@ describe("Add item", () => {
       category: "Fruit",
       quantity: 5,
       unit: "units",
-      item_id: Date.now(),
+      item_id: 200
     };
     await signIn("michaeljrossdev@gmail.com", "password");
 

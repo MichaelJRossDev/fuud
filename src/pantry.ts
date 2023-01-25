@@ -13,16 +13,17 @@ export interface PantryItem {
   category: string;
   quantity: number;
   unit: string;
-  item_id: number;
+  item_id?: number;
 }
 
 export const addItem = async (item: PantryItem) => {
-  await set(ref(db, `${auth.currentUser!.uid}` + "/pantry/" + item.item_id), {
+  const item_id = item.item_id ? item.item_id : Number(Date.now())
+  await set(ref(db, `${auth.currentUser!.uid}` + "/pantry/" + item_id), {
     name : item.name,
     expiry: item.expiry,
     category : item.category,
     quantity : item.quantity,
     unit : item.unit,
-    item_id:item.item_id
+    item_id: item_id
   });
 };
