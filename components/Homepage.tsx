@@ -1,8 +1,15 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
+import { useState } from "react"
+import Pantry from "./Pantry"
 
 
 
 export default function Homepage() {
+    const [inPantry, setInPantry] = useState<boolean>(false)
+    
+    if (inPantry) {
+        return <Pantry setInPantry={setInPantry} />
+    }
     return(
         <View style={styles.container}>
         <View style={styles.header} >
@@ -12,7 +19,10 @@ export default function Homepage() {
                 <Text style={styles.slogan}>Waste Less, Save More, Live More.</Text>
             </View>
             <View style={styles.nav}>
-                <TouchableOpacity style={styles.homeButtons}>
+                <TouchableOpacity style={styles.homeButtons}
+                    onPress={() => {
+                        setInPantry(true)
+                }}>
                     <Text style={styles.homeButtonText}>Pantry</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.homeButtons}>
