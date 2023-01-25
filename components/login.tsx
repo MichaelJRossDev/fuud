@@ -41,7 +41,6 @@ export default function LogIn({setLoggedIn}) {
     
       <TouchableOpacity onPress={() => {
         signIn(email, password)
-        console.log("Im Logging in!")
         setLoggedIn(true)}} 
         style={styles.loginBtn}>
           <Text style={styles.loginText}> Log In</Text>
