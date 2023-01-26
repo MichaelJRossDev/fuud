@@ -56,6 +56,9 @@ export const getPantry = async () => {
   return Object.values(pantryItems);
 };
 
+export const deleteItemById = async (id:number) => {
+  await set(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), null)
+  }
 export const searchPantry = async (
   pantryArray: Array<PantryItem>,
   searchParameter: string
@@ -69,4 +72,5 @@ export const searchPantry = async (
 
 export const patchItemById = async (id:number, changes:ItemChanges) => {
   update(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), changes)
+
 }
