@@ -16,15 +16,6 @@ export interface PantryItem {
   item_id?: number;
 }
 
-export interface ItemFilter {
-  name?: string;
-  expiry?: number;
-  category?: string;
-  quantity?: number;
-  unit?: string;
-  item_id?: number;
-}
-
 export const addItem = async (item: PantryItem) => {
   const item_id = item.item_id ? item.item_id : Number(Date.now());
   await set(ref(db, `${auth.currentUser!.uid}` + "/pantry/" + item_id), {
@@ -44,32 +35,13 @@ export const emptyPantry = async () => {
 export const getPantry = async () => {
   let pantryItems = {};
   await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/"))
-    .then((snapshot) => snapshot.val())
-    .then((data) => {
+    .then(snapshot => snapshot.val())
+    .then(data => {
       pantryItems = data;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 
-  return Object.values(pantryItems);
-};
-
-export const filterPantry = async (
-  pantryArray: Array<PantryItem>,
-  filters: any
-) => {
-  return pantryArray.filter((item: any) => {
-    let isValid: boolean = true;
-
-    for (const filter in filters) {
-      if (Object.prototype.hasOwnProperty.call(filters, filter)) {
-        if (item[filter] !== filters[filter]) {
-          isValid = false;
-        }
-      }
-    }
-
-    return isValid;
-  });
+  return Object.values(pantryItems)
 };
