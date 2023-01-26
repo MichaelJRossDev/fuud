@@ -43,5 +43,5 @@ export const getPantry = async () => {
       console.log(err);
     });
 
-  return pantryItems;
+  return Object.values(pantryItems)
 };

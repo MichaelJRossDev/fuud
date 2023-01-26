@@ -103,9 +103,8 @@ describe("getPantry", () => {
     }
     // const list = await pantry.getPantry();
     const pantryItems = await pantry.getPantry();
-    const values = Object.values(pantryItems);
-    expect(values).toHaveLength(5);
-    expect(values).toEqual(
+    expect(pantryItems).toHaveLength(5);
+    expect(pantryItems).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           name: expect.any(String),
