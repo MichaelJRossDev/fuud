@@ -151,22 +151,6 @@ describe('deleteItemById', () => {
   });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 describe('filterPantry', () => {
   test('Applies filters to pantry', async () => {
     await pantry.addItem({
