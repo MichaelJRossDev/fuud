@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#F5f6f4",
         alignItems: "center",
         flexDirection: "column",
-        justifyContent: "center",
     },
     
     header: {
@@ -52,7 +51,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#4a6855",
         width: "100%",
         alignItems: "center",
-        
     },
 
     logo: {

@@ -10,6 +10,9 @@ import { useState } from "react";
 
 export default function AddItem({ setInAddItem }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [expiry, setExpiry] = useState<number>(0);
+
 
   return (
     <View style={styles.container}>
@@ -120,13 +123,13 @@ const styles = StyleSheet.create({
   inputs: {
     borderWidth: 1,
     padding: 10,
-    },
-  
-    btnView: {
-        width: "100%",
-        alignItems: "center",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
+  },
+
+  btnView: {
+    width: "100%",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
 
   addItemBtn: {
@@ -136,6 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#d08651",
+    height: "30%",
   },
 
   addItemText: {
@@ -149,6 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#d08651",
+    height: "30%",
   },
 
   cancelText: {

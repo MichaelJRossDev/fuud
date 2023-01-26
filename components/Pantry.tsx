@@ -17,7 +17,9 @@ const [inAddItem, setInAddItem] = useState<boolean>(false)
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.logo}>fuud.</Text>
+        <TouchableOpacity  onPress={() => {setInPantry(false)}}>
+          <Text style={styles.logo}>fuud.</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.searchBar}>
         <TextInput placeholder="Search" />
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: "5%",
     backgroundColor: "#d08651",
   },
 
