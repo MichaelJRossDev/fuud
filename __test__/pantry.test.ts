@@ -119,7 +119,34 @@ describe("getPantry", () => {
   });
 });
 
-describe.only("searchPantry", () => {
+
+describe('patchItemById', () => {
+  test('should patch item by ID', async () => {
+    const initialItem:pantry.PantryItem = {
+      name: "pineapple",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "Fruit",
+      quantity: 5,
+      unit: "units",
+      item_id: 42,
+    }
+  
+    await pantry.addItem(initialItem);
+  
+    await pantry.patchItemById(42, {quantity:4})
+  
+    expect(Object.values(await pantry.getPantry())[0]).toEqual({
+      name: "pineapple",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "Fruit",
+      quantity: 4,
+      unit: "units",
+      item_id: 42,
+    })
+  });
+});
+
+describe("searchPantry", () => {
   test("searches pantry", async () => {
     await pantry.addItem({
       name: "pineapple",
@@ -189,3 +216,4 @@ describe.only("searchPantry", () => {
     ]);
   });
 });
+
