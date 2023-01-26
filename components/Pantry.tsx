@@ -6,14 +6,32 @@ import {
   TextInput,
 } from "react-native";
 import AddItem from "./AddItem";
+import ItemCard from "./ItemCard";
 import { useState } from "react";
 
 export default function Pantry({ setInPantry }) {
 const [inAddItem, setInAddItem] = useState<boolean>(false)
+const [itemInfo, setItemInfo] = useState<object>({
+  name: "banana",
+  expiry: Number(new Date(2024, 1, 1)),
+  category: "Fruit",
+  quantity: 5,
+  unit: "units",
+  item_id: 200,
+})
+const [inItemCard, setInItemCard] = useState<boolean>(true)
 
     if (inAddItem) {
         return <AddItem setInAddItem={setInAddItem} />
-    }
+    } else if (inItemCard){
+      return <ItemCard name ={itemInfo.name} 
+      expiryDate={itemInfo.expiry}
+      category={itemInfo.category}
+      quantity={itemInfo.quantity}
+      unit={itemInfo.unit}
+      setInItemCard={setInItemCard}
+      />
+    } else {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -32,6 +50,7 @@ const [inAddItem, setInAddItem] = useState<boolean>(false)
       </TouchableOpacity>
     </View>
   );
+}
 }
 
 const styles = StyleSheet.create({
