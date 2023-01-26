@@ -7,6 +7,8 @@ import { app, db, auth } from "../config/firebaseConfig";
 
 import { set, ref, get, child } from "firebase/database";
 
+import FuzzySearch from "fuzzy-search";
+
 export interface PantryItem {
   name: string;
   expiry: number;
@@ -44,11 +46,11 @@ export const emptyPantry = async () => {
 export const getPantry = async () => {
   let pantryItems = {};
   await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/"))
-    .then(snapshot => snapshot.val())
-    .then(data => {
+    .then((snapshot) => snapshot.val())
+    .then((data) => {
       pantryItems = data;
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
   return Object.values(pantryItems)
@@ -75,5 +77,15 @@ export const filterPantry = async (
     }
 
     return isValid;
+  })};
+
+export const searchPantry = async (
+  pantryArray: Array<PantryItem>,
+  searchParameter: string
+) => {
+  const searcher = new FuzzySearch(pantryArray, ["name", "category"], {
+    caseSensitive: false,
   });
-};
+  console.log(searcher.search(searchParameter));
+  return searcher.search(searchParameter);
+}
