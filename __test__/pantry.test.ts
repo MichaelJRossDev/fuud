@@ -119,40 +119,12 @@ describe("getPantry", () => {
   });
 });
 
-
-
-describe('patchItemById', () => {
-  test('should patch item by ID', async () => {
-    const initialItem:pantry.PantryItem = {
-      name: "pineapple",
-      expiry: Number(new Date(2024, 1, 1)),
-      category: "Fruit",
-      quantity: 5,
-      unit: "units",
-      item_id: 42,
-    }
-  
-    await pantry.addItem(initialItem);
-  
-    await pantry.patchItemById(42, {quantity:4})
-  
-    expect(Object.values(await pantry.getPantry())[0]).toEqual({
-      name: "pineapple",
-      expiry: Number(new Date(2024, 1, 1)),
-      category: "Fruit",
-      quantity: 4,
-      unit: "units",
-      item_id: 42,
-    })
-  });
-});
-
-describe("searchPantry", () => {
-  test("searches pantry", async () => {
+describe("filterPantry", () => {
+  test("filters pantry by category", async () => {
     await pantry.addItem({
       name: "pineapple",
       expiry: Number(new Date(2024, 1, 1)),
-      category: "Fruit",
+      category: "fruit",
       quantity: 4,
       unit: "unit",
     });
@@ -186,22 +158,16 @@ describe("searchPantry", () => {
     });
 
     const currentPantry: any = await pantry.getPantry();
+    const filteredPantry = await pantry.filterPantry(currentPantry, {
+      category: "fruit",
+    });
 
-    expect(await pantry.searchPantry(currentPantry, "es")).toEqual([
-      {
-        name: "pesto",
-        expiry: Number(new Date(2024, 1, 1)),
-        category: "condiment",
-        quantity: 800,
-        unit: "g",
-        item_id: expect.any(Number)
-      },
-    ]);
-    expect(await pantry.searchPantry(currentPantry, "fr")).toEqual([
+    expect(filteredPantry).toHaveLength(2);
+    expect(filteredPantry).toEqual([
       {
         name: "pineapple",
         expiry: Number(new Date(2024, 1, 1)),
-        category: "Fruit",
+        category: "fruit",
         quantity: 4,
         unit: "unit",
         item_id: expect.any(Number),
@@ -216,5 +182,67 @@ describe("searchPantry", () => {
       },
     ]);
   });
-});
 
+  test("filters pantry by unit", async () => {
+    await pantry.addItem({
+      name: "pineapple",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "fruit",
+      quantity: 4,
+      unit: "unit",
+    });
+    await pantry.addItem({
+      name: "bacon",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "meat",
+      quantity: 4,
+      unit: "kg",
+    });
+    await pantry.addItem({
+      name: "Broccoli",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "vegetable",
+      quantity: 400,
+      unit: "g",
+    });
+    await pantry.addItem({
+      name: "kiwi",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "fruit",
+      quantity: 8,
+      unit: "units",
+    });
+    await pantry.addItem({
+      name: "pesto",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "condiment",
+      quantity: 800,
+      unit: "g",
+    });
+
+    const currentPantry: any = await pantry.getPantry();
+    const filteredPantry = await pantry.filterPantry(currentPantry, {
+      unit: "g",
+    });
+
+    expect(filteredPantry).toHaveLength(2);
+    expect(filteredPantry).toEqual([
+      {
+        name: "Broccoli",
+        expiry: Number(new Date(2024, 1, 1)),
+        category: "vegetable",
+        quantity: 400,
+        unit: "g",
+        item_id: expect.any(Number),
+      },
+      {
+        name: "pesto",
+        expiry: Number(new Date(2024, 1, 1)),
+        category: "condiment",
+        quantity: 800,
+        unit: "g",
+        item_id: expect.any(Number),
+      },
+    ]);
+  });
+});
