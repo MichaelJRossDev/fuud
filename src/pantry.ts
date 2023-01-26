@@ -42,10 +42,10 @@ export const getPantry = async () => {
     .catch(err => {
       console.log(err);
     });
-
-  return pantryItems;
-};
+    return Object.values(pantryItems)
+  };
 
 export const deleteItemById = async (id:number) => {
   await set(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), null)
 }
+
