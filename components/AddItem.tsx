@@ -7,12 +7,14 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AddItem({ setInAddItem }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [expiry, setExpiry] = useState<number>(0);
-
+  const [quantity, setQuantity] = useState<number>(0);
+  const [unit, setUnit] = useState<string>("");
+  const [expiryDate, setExpiryDate] = useState<any>()
 
   return (
     <View style={styles.container}>
@@ -30,39 +32,63 @@ export default function AddItem({ setInAddItem }) {
       </View>
 
       <View style={styles.addItemInputs}>
-        <TextInput placeholder="Item Name" style={styles.inputs} />
-        <TextInput placeholder="Expiry Date" style={styles.inputs} />
-        <TextInput placeholder="Weight" style={styles.inputs} />
-        <TextInput placeholder="Quantity" style={styles.inputs} />
+        <TextInput
+          onChangeText={(text) => {
+            setName(text);
+          }}
+          placeholder="Item Name"
+          style={styles.inputs}
+        />
+        <RNDateTimePicker
+        mode="date"
+        onChange={(event, date) => {
+          setExpiryDate(date)
+          console.log(date)
+        }}
+        value={new Date()}
+        // not complete. Need to add confirm/cancel buttons + adjust for android
+        //date screen shows up automatically without prompt
+        />
+
+        <TextInput
+          onChangeText={(number) => {
+            setQuantity(parseInt(number));
+          }}
+          placeholder="Weight"
+          style={styles.inputs}
+        />
+        <TextInput
+          onChangeText={(string) => {
+            setUnit(string);
+          }}
+          placeholder="Quantity"
+          style={styles.inputs}
+        />
 
         <View style={styles.inputs}>
           <Picker
             selectedValue={selectedCategory}
             onValueChange={(itemValue) => {
               setSelectedCategory(itemValue);
+              console.log(selectedCategory)
             }}
           >
             <Picker.Item label="Category" value={"Please Select"} />
-            <Picker.Item label="Meat" value={"Please Select"} />
-            <Picker.Item label="Vegetables" value={"Please Select"} />
-            <Picker.Item label="Fruit" value={"Please Select"} />
+            <Picker.Item label="Meat" value={"Meat"} />
+            <Picker.Item label="Vegetables" value={"Vegetables"} />
+            <Picker.Item label="Fruit" value={"Fruit"} />
           </Picker>
         </View>
       </View>
 
       <View style={styles.btnView}>
-        <TouchableOpacity
-          onPress={() => {
-        
-          }}
-          style={styles.addItemBtn}
-        >
+        <TouchableOpacity onPress={() => {}} style={styles.addItemBtn}>
           <Text style={styles.addItemText}> Add </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => {
-                      setInAddItem(false);
+            setInAddItem(false);
           }}
           style={styles.cancelBtn}
         >
