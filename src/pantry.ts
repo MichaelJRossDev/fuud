@@ -5,7 +5,9 @@ import {
 } from "firebase/auth";
 import { app, db, auth } from "../config/firebaseConfig";
 
-import { set, ref, get, child } from "firebase/database";
+import { set, ref, get, child, update } from "firebase/database";
+
+import FuzzySearch from "fuzzy-search";
 
 export interface PantryItem {
   name: string;
@@ -16,13 +18,12 @@ export interface PantryItem {
   item_id?: number;
 }
 
-export interface ItemFilter {
+export interface ItemChanges {
   name?: string;
   expiry?: number;
   category?: string;
   quantity?: number;
   unit?: string;
-  item_id?: number;
 }
 
 export const addItem = async (item: PantryItem) => {
@@ -55,21 +56,21 @@ export const getPantry = async () => {
   return Object.values(pantryItems);
 };
 
-export const filterPantry = async (
+export const deleteItemById = async (id:number) => {
+  await set(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), null)
+  }
+export const searchPantry = async (
   pantryArray: Array<PantryItem>,
-  filters: any
+  searchParameter: string
 ) => {
-  return pantryArray.filter((item: any) => {
-    let isValid: boolean = true;
-
-    for (const filter in filters) {
-      if (Object.prototype.hasOwnProperty.call(filters, filter)) {
-        if (item[filter] !== filters[filter]) {
-          isValid = false;
-        }
-      }
-    }
-
-    return isValid;
+  const searcher = new FuzzySearch(pantryArray, ["name", "category"], {
+    caseSensitive: false,
   });
+  console.log(searcher.search(searchParameter));
+  return searcher.search(searchParameter);
 };
+
+export const patchItemById = async (id:number, changes:ItemChanges) => {
+  update(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), changes)
+
+}
