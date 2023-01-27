@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
       },
     itemName : {
-
     },
 
     itemExpiry : {

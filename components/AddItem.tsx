@@ -76,12 +76,11 @@ export default function AddItem({ setInAddItem }) {
           style={styles.inputs}
         />
 
-        <View style={styles.inputs}>
-          <Picker
+        <View>
+          <Picker style={styles.inputs}
             selectedValue={selectedCategory}
             onValueChange={(itemValue) => {
               setSelectedCategory(itemValue);
-              console.log(selectedCategory);
             }}
           >
             <Picker.Item label="Category" value={"Please Select"} />
@@ -113,7 +112,7 @@ export default function AddItem({ setInAddItem }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5f6f4",
+    backgroundColor: "#34282e",
     flexDirection: "column",
     alignItems: "center",
   },
@@ -140,7 +139,7 @@ const styles = StyleSheet.create({
   },
 
   addOptionsBtn: {
-    backgroundColor: "#95a99c",
+    backgroundColor: "#D08651",
     padding: 15,
     marginTop: 10,
     marginLeft: 10,
@@ -155,11 +154,14 @@ const styles = StyleSheet.create({
 
   addItemInputs: {
     width: "80%",
+    margin: 10,
   },
 
   inputs: {
     borderWidth: 1,
     padding: 10,
+    margin: 10,
+    backgroundColor: "#f5f6f4",
   },
 
   btnView: {
@@ -196,4 +198,9 @@ const styles = StyleSheet.create({
   cancelText: {
     color: "#f5f6f4",
   },
+
+  picker: {
+    height: 25,
+    alignItems: "center",
+  }
 });

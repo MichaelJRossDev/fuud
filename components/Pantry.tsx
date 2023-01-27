@@ -19,7 +19,7 @@ const [itemInfo, setItemInfo] = useState<object>({
   unit: "units",
   item_id: 200,
 })
-const [inItemCard, setInItemCard] = useState<boolean>(true)
+const [inItemCard, setInItemCard] = useState<boolean>(false)
 
     if (inAddItem) {
         return <AddItem setInAddItem={setInAddItem} />
