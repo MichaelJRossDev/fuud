@@ -22,7 +22,7 @@ export default function Pantry({ setInPantry }) {
     unit: "units",
     item_id: 200,
   });
-  const [inItemCard, setInItemCard] = useState<boolean>(true);
+  const [inItemCard, setInItemCard] = useState<boolean>(false);
   const [pantryList, setPantryList] = useState<PantryItem[]>([
     {
       name: "Bananas",
@@ -75,35 +75,65 @@ export default function Pantry({ setInPantry }) {
             <Text style={styles.logo}>fuud.</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.searchBar}>
-          <TextInput placeholder="Search" />
-        </View>
-        <View style={styles.pantryList}>
-          <ScrollView>
-            <FlatList
-              data={pantryList}
-               />
-          </ScrollView>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            setInAddItem(true);
-          }}
-          style={styles.addItemBtn}
-        >
-          <Text style={styles.addItemText}> Add Item </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => {
-            setInPantry(false);
-          }}
-          style={styles.homeBtn}
-        >
-          <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
-            Return to Dashboard
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.navBar}>
+          <View style={styles.searchBar}>
+            <TextInput placeholder="Search" />
+          </View>
+
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                setInAddItem(true);
+              }}
+              style={styles.addItemBtn}
+            >
+              <Text style={styles.addItemText}> Add Item </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.pantryList}>
+          <FlatList
+            data={pantryList}
+            renderItem={({ item }) => {
+              const expiration = new Date(item.expiry);
+              return (
+                <TouchableOpacity
+                  style={styles.display}
+                  key={item.item_id}
+                  onPress={() => {
+                    setItemInfo(item);
+                    setInItemCard(true);
+                  }}
+                >
+                  <View>
+                    <View style={styles.image}>
+                      <Text>Food item category image here</Text>
+                    </View>
+                    <Text style={styles.text}>{item.name}</Text>
+                    <Text style={styles.text}>{expiration.toDateString()}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            numColumns={2}
+          />
+        </View>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              setInPantry(false);
+            }}
+            style={styles.homeBtn}
+          >
+            <Text
+              style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}
+            >
+              Return to Dashboard
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -130,30 +160,37 @@ const styles = StyleSheet.create({
     color: "#d08651",
   },
 
-  searchBar: {
+  navBar: {
     height: 40,
-    margin: 20,
+    margin: 5,
     borderWidth: 1,
     padding: 10,
-    width: "90%",
+    width: "60%",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
+
+  searchBar: {},
 
   pantryList: {
     marginTop: 10,
-    backgroundColor: "#95a99c",
+    backgroundColor: "#F5f6f4",
     height: "55%",
     width: "90%",
     borderRadius: 25,
     alignSelf: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    display: "flex",
   },
 
   addItemBtn: {
-    width: "80%",
+    width: "20%",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "5%",
     backgroundColor: "#d08651",
   },
 
@@ -169,5 +206,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#d08651",
+  },
+
+  display: {
+    borderRadius: 15,
+    width: "45%",
+    margin: 10,
+    backgroundColor: "#95a99c",
+    padding: 5,
+    alignItems: "center",
+  },
+  image: {
+    borderWidth: 1,
+    backgroundColor: "#fff",
+  },
+  text: {
+    fontWeight: "bold",
+    alignSelf: "center",
   },
 });
