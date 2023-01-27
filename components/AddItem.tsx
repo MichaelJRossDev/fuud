@@ -7,17 +7,29 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 export default function AddItem({ setInAddItem }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
   const [unit, setUnit] = useState<string>("");
-  const [expiryDate, setExpiryDate] = useState<any>()
+  const [expiryDate, setExpiryDate] = useState<any>(new Date());
+  const [show, setShow] = useState<boolean>(false);
 
   return (
     <View style={styles.container}>
+      {show && (
+        <RNDateTimePicker
+          mode="date"
+          onChange={(event, date) => {
+            setExpiryDate(date);
+            console.log(date);
+            setShow(false);
+          }}
+          value={new Date()}
+        />
+      )}
       <View style={styles.header}>
         <Text style={styles.logo}>fuud.</Text>
       </View>
@@ -39,16 +51,15 @@ export default function AddItem({ setInAddItem }) {
           placeholder="Item Name"
           style={styles.inputs}
         />
-        <RNDateTimePicker
-        mode="date"
-        onChange={(event, date) => {
-          setExpiryDate(date)
-          console.log(date)
-        }}
-        value={new Date()}
-        // not complete. Need to add confirm/cancel buttons + adjust for android
-        //date screen shows up automatically without prompt
-        />
+
+        <TouchableOpacity
+          style={styles.inputs}
+          onPress={() => {
+            setShow(true);
+          }}
+        >
+          <Text>Expiry: {expiryDate.toDateString()}</Text>
+        </TouchableOpacity>
 
         <TextInput
           onChangeText={(number) => {
@@ -70,7 +81,7 @@ export default function AddItem({ setInAddItem }) {
             selectedValue={selectedCategory}
             onValueChange={(itemValue) => {
               setSelectedCategory(itemValue);
-              console.log(selectedCategory)
+              console.log(selectedCategory);
             }}
           >
             <Picker.Item label="Category" value={"Please Select"} />
