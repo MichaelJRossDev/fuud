@@ -81,14 +81,14 @@ export default function Pantry({ setInPantry }) {
             <TextInput placeholder="Search" />
           </View>
 
-          <View>
+          <View style={styles.addBtnView}>
             <TouchableOpacity
               onPress={() => {
                 setInAddItem(true);
               }}
               style={styles.addItemBtn}
             >
-              <Text style={styles.addItemText}> Add Item </Text>
+              <Text style={styles.addItemText}> + </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -160,18 +160,25 @@ const styles = StyleSheet.create({
     color: "#d08651",
   },
 
-  navBar: {
+  navBar: { 
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+  },
+
+  searchBar: {
+    alignSelf: "flex-start",
+    width: "60%",
     height: 40,
     margin: 5,
     borderWidth: 1,
     padding: 10,
-    width: "60%",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    flexDirection: "row",
   },
 
-  searchBar: {},
+  addBtnView: {
+    alignSelf: "flex-end"
+
+  },
 
   pantryList: {
     marginTop: 10,
@@ -186,9 +193,9 @@ const styles = StyleSheet.create({
   },
 
   addItemBtn: {
-    width: "20%",
-    borderRadius: 25,
+    borderRadius: 15,
     height: 50,
+    width: 50,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#d08651",
@@ -196,6 +203,7 @@ const styles = StyleSheet.create({
 
   addItemText: {
     color: "#f5f6f4",
+    fontSize: 40,
   },
 
   homeBtn: {
