@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth";
 
 const admin = require("firebase-admin");
 
-const serviceAccount = require("../config/fuud-34a91-firebase-adminsdk-2xmkp-f8b467f01e.json");
+const serviceAccount = require("../config/fuud-34a91-68792cd675af.json");
 
 const adminApp = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
