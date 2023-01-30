@@ -6,8 +6,9 @@ import {
   TextInput,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 export default function AddItem({ setInAddItem }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -16,7 +17,37 @@ export default function AddItem({ setInAddItem }) {
   const [unit, setUnit] = useState<string>("");
   const [expiryDate, setExpiryDate] = useState<any>(new Date());
   const [show, setShow] = useState<boolean>(false);
+  const [hasPermission, setHasPermission] = useState<any>(null);
+  const [scanned, setScanned] = useState<boolean>(false);
+  const [openScanner, setOpenScanner] = useState<boolean>(false);
 
+
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+    getBarCodeScannerPermissions();
+  }, []);
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    setOpenScanner(false)
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+  if (openScanner) {
+    return (
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+      />
+    );
+  }
   return (
     <View style={styles.container}>
       {show && (
@@ -33,9 +64,10 @@ export default function AddItem({ setInAddItem }) {
       <View style={styles.header}>
         <Text style={styles.logo}>fuud.</Text>
       </View>
-
       <View style={styles.addOptions}>
-        <TouchableOpacity style={styles.addOptionsBtn}>
+        <TouchableOpacity style={styles.addOptionsBtn} onPress={() => {
+          setOpenScanner(true)
+        }}>
           <Text style={styles.addOptionsText}>Barcode</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.addOptionsBtn}>
