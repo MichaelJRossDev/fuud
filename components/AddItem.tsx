@@ -8,6 +8,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import ItemAdder from "./ItemAdder";
 
 export default function AddItem({ setInAddItem }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -92,7 +93,8 @@ export default function AddItem({ setInAddItem }) {
       </View>
 
       <View style={styles.btnView}>
-        <TouchableOpacity onPress={() => {}} style={styles.addItemBtn}>
+        <TouchableOpacity onPress={() => {ItemAdder(name, quantity, selectedCategory, unit, expiryDate)
+        setInAddItem(false)}} style={styles.addItemBtn}>
           <Text style={styles.addItemText}> Add </Text>
         </TouchableOpacity>
 
