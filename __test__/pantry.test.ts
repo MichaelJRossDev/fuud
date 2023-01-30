@@ -352,7 +352,7 @@ describe("searchPantry", () => {
 
 describe("getItemInfo", () => {
   test("gets correct information in correct format", async () => {
-    expect(await pantry.getItemInfo("50457236")).toEqual({
+    expect(await pantry.getItemInfoByBarcode("50457236")).toEqual({
       name: "Tomato Ketchup",
       category: "condiments",
       quantity: 800,

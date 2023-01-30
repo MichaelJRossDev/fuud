@@ -96,7 +96,7 @@ export const searchPantry = async (
   return searcher.search(searchParameter);
 };
 
-export const getItemInfo = async (barcode: string) => {
+export const getItemInfoByBarcode = async (barcode: string) => {
   let item: object = {}
   const client = new off();
   let quantityJustNumber: string = ""
