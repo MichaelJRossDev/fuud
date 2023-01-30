@@ -5,10 +5,10 @@ import {
 } from "firebase/auth";
 import { app, db, auth } from "../config/firebaseConfig";
 
-export const signIn = async (email: string, password: string, setLoggedIn) => {
+export const signIn = async (email: string, password: string, stateSet: any) => {
   await signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      setLoggedIn(true);
+      stateSet(true);
       console.log("Login Success")
     })
     .catch((err) => alert("Username or Password is Incorrect"));
