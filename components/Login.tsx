@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import CreateAcc from "./CreateAcc"
-import {signIn} from "../src/users"
+import { signIn } from "../src/users"
 
 export default function LogIn({setLoggedIn}) {
   const [email, setEmail] = useState<string>("");
@@ -40,14 +40,14 @@ export default function LogIn({setLoggedIn}) {
 
     
       <TouchableOpacity onPress={() => {
-        signIn(email, password)
-        setLoggedIn(true)}} 
+        signIn(email, password, setLoggedIn)
+        }} 
         style={styles.loginBtn}>
           <Text style={styles.loginText}> Log In</Text>
           </TouchableOpacity>
 
       <TouchableOpacity onPress={() => {
-        setCreateAcc(true)}} 
+       setCreateAcc(true)}} 
         style={styles.loginBtn}>
       <Text style={styles.loginText}> Create Account</Text>
       </TouchableOpacity>

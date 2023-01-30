@@ -5,7 +5,7 @@ import { signIn, signOutUser } from "../src/users";
 
 beforeAll(async () => {
   await signOutUser();
-  await signIn("michaeljrossdev@gmail.com", "password");
+  await signIn("michaeljrossdev@gmail.com", "password", () => {});
 });
 
 beforeEach(async () => {
