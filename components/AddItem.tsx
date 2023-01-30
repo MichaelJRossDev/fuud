@@ -6,8 +6,10 @@ import {
   TextInput,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import Scanner from "./Scanner";
+
 
 export default function AddItem({ setInAddItem }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -16,7 +18,12 @@ export default function AddItem({ setInAddItem }) {
   const [unit, setUnit] = useState<string>("");
   const [expiryDate, setExpiryDate] = useState<any>(new Date());
   const [show, setShow] = useState<boolean>(false);
+  const [openScanner, setOpenScanner] = useState<boolean>(false);
 
+  if (openScanner) {
+  return <Scanner setOpenScanner={setOpenScanner} />;
+} else {
+  
   return (
     <View style={styles.container}>
       {show && (
@@ -33,9 +40,10 @@ export default function AddItem({ setInAddItem }) {
       <View style={styles.header}>
         <Text style={styles.logo}>fuud.</Text>
       </View>
-
       <View style={styles.addOptions}>
-        <TouchableOpacity style={styles.addOptionsBtn}>
+        <TouchableOpacity style={styles.addOptionsBtn} onPress={() => {
+          setOpenScanner(true)
+        }}>
           <Text style={styles.addOptionsText}>Barcode</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.addOptionsBtn}>
@@ -107,7 +115,7 @@ export default function AddItem({ setInAddItem }) {
       </View>
     </View>
   );
-}
+}}
 
 const styles = StyleSheet.create({
   container: {
@@ -202,5 +210,8 @@ const styles = StyleSheet.create({
   picker: {
     height: 25,
     alignItems: "center",
-  }
+  },
+
+
+ 
 });
