@@ -53,13 +53,12 @@ export const getPantry = async () => {
     .catch((err) => {
       console.log(err);
     });
-  return Object.values(pantryItems)
-  };
+  return Object.values(pantryItems);
+};
 
-export const deleteItemById = async (id:number) => {
-  await set(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), null)
-}
-
+export const deleteItemById = async (id: number) => {
+  await set(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + id), null);
+};
 
 export const filterPantry = async (
   pantryArray: Array<PantryItem>,
@@ -77,7 +76,8 @@ export const filterPantry = async (
     }
 
     return isValid;
-  })};
+  });
+};
 
 export const searchPantry = async (
   pantryArray: Array<PantryItem>,
@@ -88,4 +88,18 @@ export const searchPantry = async (
   });
   console.log(searcher.search(searchParameter));
   return searcher.search(searchParameter);
-}
+};
+
+export const addToGraveyard = async (id: number) => {
+  await get(
+    child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + String(id))
+  )
+    .then((snapshot) => snapshot.val())
+    .then(async (data) => {
+      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + id), data);
+      await deleteItemById(id)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
