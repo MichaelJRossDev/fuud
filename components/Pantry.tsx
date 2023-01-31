@@ -61,6 +61,7 @@ export default function Pantry({ setInPantry }) {
         quantity={itemInfo.quantity}
         unit={itemInfo.unit}
         setInItemCard={setInItemCard}
+        itemId={itemInfo.item_id}
       />
     );
   } else {

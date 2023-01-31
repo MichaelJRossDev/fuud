@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
+import { deleteItemById } from "../src/pantry";
 
 export default function ItemCard({
   name,
@@ -14,6 +15,7 @@ export default function ItemCard({
   quantity,
   unit,
   setInItemCard,
+  itemId,
 }) {
   const date = new Date(expiryDate);
   const currDate = Number(new Date());
@@ -49,7 +51,10 @@ export default function ItemCard({
       </View>
       <View style={styles.infoBtn}>
         <TouchableOpacity style={styles.eatBtn} onPress={() => {
-          
+          const deleteItem = async () => {
+            await deleteItemById(itemId)
+          };
+          deleteItem();
         }}>
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
             I've eaten this item
