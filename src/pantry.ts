@@ -8,6 +8,7 @@ import { app, db, auth } from "../config/firebaseConfig";
 import { set, ref, get, child } from "firebase/database";
 
 import FuzzySearch from "fuzzy-search";
+import { Console } from "console";
 
 export interface PantryItem {
   name: string;
@@ -92,13 +93,15 @@ export const searchPantry = async (
 };
 
 export const addToGraveyard = async (id: number) => {
+  
   await get(
     child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + String(id))
   )
     .then((snapshot) => snapshot.val())
     .then(async (data) => {
-      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + id), data);
-      await deleteItemById(id);
+      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)), data);
+      await deleteItemById(id)
+      console.log("graveyard item set successfully");
     })
     .catch((err) => {
       console.log(err);
@@ -111,9 +114,14 @@ export const emptyGraveyard = async () => {
 
 
 export const getGraveyard = async () => {
+  console.log("in get graveyard")
   let graveyardItems = {};
+  console.log(auth.currentUser!.uid, "<< current user")
   await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/"))
-    .then((snapshot) => snapshot.val())
+    .then((snapshot) => {
+     console.log(snapshot)
+      return snapshot.val()
+    })
     .then((data) => {
       graveyardItems = data;
     })

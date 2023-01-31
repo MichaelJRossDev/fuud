@@ -103,7 +103,6 @@ describe("getPantry", () => {
         item_id: Number(Date.now()),
       });
     }
-    // const list = await pantry.getPantry();
     const pantryItems = await pantry.getPantry();
     expect(pantryItems).toHaveLength(5);
     expect(pantryItems).toEqual(
@@ -403,8 +402,10 @@ describe("emptyGraveyard", () => {
   });
 });
 
-describe.only("getGraveyard", () => {
+describe("getGraveyard", () => {
   test("gets all items from graveyard", async () => {
+    const itemIDArray = [];
+
     await pantry.emptyGraveyard();
     for (let i = 0; i < 5; i++) {
       await pantry.addItem({
@@ -417,11 +418,10 @@ describe.only("getGraveyard", () => {
       });
     }
 
-    const pantryItems = await pantry.getPantry()
-      pantryItems.forEach(async (item: any) => {
-        await pantry.addToGraveyard(item.item_id);
-      });
-    
+    const pantryItems: Array<any> = await pantry.getPantry();
+    for (let i = 0; i < pantryItems.length; i++) {
+      await pantry.addToGraveyard(pantryItems[i].item_id);
+    }
 
     const graveyardItems = await pantry.getGraveyard();
     expect(graveyardItems).toHaveLength(5);
