@@ -3,6 +3,7 @@ import { getAuth } from "firebase-admin/auth";
 import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
 
+
 const admin = require("firebase-admin");
 
 const serviceAccount = require("../config/fuud-34a91-68792cd675af.json");
@@ -34,7 +35,7 @@ describe("Create User", () => {
 describe("Sign in user", () => {
   test("should sign in user", async () => {
     await users.signOutUser()
-    await users.signIn("michaeljrossdev@gmail.com", "password");
+    await users.signIn("michaeljrossdev@gmail.com", "password", () => {});
       expect(auth.currentUser!.email).toBe("michaeljrossdev@gmail.com");
   });
 });

@@ -5,7 +5,7 @@ import { signIn, signOutUser } from "../src/users";
 
 beforeAll(async () => {
   await signOutUser();
-  await signIn("michaeljrossdev@gmail.com", "password");
+  await signIn("michaeljrossdev@gmail.com", "password", () => {});
 });
 
 beforeEach(async () => {
@@ -120,16 +120,16 @@ describe("getPantry", () => {
   });
 });
 
-describe('deleteItemById', () => {
-  test('should delete item by ID', async () => {
+describe("deleteItemById", () => {
+  test("should delete item by ID", async () => {
     const item1: pantry.PantryItem = {
       name: "pineapple",
       expiry: Number(new Date(2024, 1, 1)),
       category: "Fruit",
       quantity: 5,
       unit: "units",
-      item_id: 42
-    }
+      item_id: 42,
+    };
 
     const item2: pantry.PantryItem = {
       name: "pineapple",
@@ -137,22 +137,22 @@ describe('deleteItemById', () => {
       category: "Fruit",
       quantity: 5,
       unit: "units",
-      item_id: 43
-    }
+      item_id: 43,
+    };
 
-    await pantry.addItem(item1)
-    await pantry.addItem(item2)
-    pantry.deleteItemById(42)
+    await pantry.addItem(item1);
+    await pantry.addItem(item2);
+    pantry.deleteItemById(42);
 
-    const pantryKeys:Array<string> = Object.keys(await pantry.getPantry());
-    
-    expect(pantryKeys).toHaveLength(1)
-    expect(pantryKeys).not.toContain("42")
+    const pantryKeys: Array<string> = Object.keys(await pantry.getPantry());
+
+    expect(pantryKeys).toHaveLength(1);
+    expect(pantryKeys).not.toContain("42");
   });
 });
 
-describe('filterPantry', () => {
-  test('Applies filters to pantry', async () => {
+describe("filterPantry", () => {
+  test("Applies filters to pantry", async () => {
     await pantry.addItem({
       name: "pineapple",
       expiry: Number(new Date(2024, 1, 1)),
@@ -316,7 +316,6 @@ describe("searchPantry", () => {
       unit: "g",
     });
 
-
     const currentPantry: any = await pantry.getPantry();
 
     expect(await pantry.searchPantry(currentPantry, "es")).toEqual([
@@ -326,7 +325,7 @@ describe("searchPantry", () => {
         category: "condiment",
         quantity: 800,
         unit: "g",
-        item_id: expect.any(Number)
+        item_id: expect.any(Number),
       },
     ]);
     expect(await pantry.searchPantry(currentPantry, "fr")).toEqual([
@@ -350,6 +349,7 @@ describe("searchPantry", () => {
   });
 });
 
+
 describe("getItemInfo", () => {
   test("gets correct information in correct format", async () => {
     expect(await pantry.getItemInfoByBarcode("50457236")).toEqual({
@@ -361,3 +361,37 @@ describe("getItemInfo", () => {
   })
 })
 
+describe("addToGraveyard", () => {
+  test("adds item to graveyard and deletes from pantry", async () => {
+    await pantry.addItem({
+      name: "pineapple",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "Fruit",
+      quantity: 4,
+      unit: "unit",
+      item_id: 4,
+    });
+    
+    await pantry.addToGraveyard(4)
+
+    await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/" + "4"))
+      .then((snapshot) => snapshot.val())
+      .then((data) => {
+        expect(data).toEqual({
+          name: "pineapple",
+          expiry: Number(new Date(2024, 1, 1)),
+          category: "Fruit",
+          quantity: 4,
+          unit: "unit",
+          item_id: 4,
+        });
+      });
+    await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + "4"))
+      .then((snapshot) => snapshot.val())
+      .then((data) => {
+        expect(data).toEqual(
+          null
+        );
+      });
+  });
+});

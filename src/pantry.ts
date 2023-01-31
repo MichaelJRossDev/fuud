@@ -96,6 +96,7 @@ export const searchPantry = async (
   return searcher.search(searchParameter);
 };
 
+
 export const getItemInfoByBarcode = async (barcode: string) => {
   let item: object = {}
   const client = new off();
@@ -149,4 +150,18 @@ export const getItemInfoByBarcode = async (barcode: string) => {
     }
   })
   return item;
+}
+
+export const addToGraveyard = async (id: number) => {
+  await get(
+    child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + String(id))
+  )
+    .then((snapshot) => snapshot.val())
+    .then(async (data) => {
+      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + id), data);
+      await deleteItemById(id)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
