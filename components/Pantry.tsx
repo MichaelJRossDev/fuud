@@ -11,12 +11,15 @@ import AddItem from "./AddItem";
 import ItemCard from "./ItemCard";
 import { useState, useEffect } from "react";
 import { getPantry, PantryItem } from "../src/pantry";
+import {Searchbar} from "react-native-paper"
+
 
 export default function Pantry({ setInPantry }) {
   const [inAddItem, setInAddItem] = useState<boolean>(false);
   const [itemInfo, setItemInfo] = useState<PantryItem>();
   const [inItemCard, setInItemCard] = useState<boolean>(false);
   const [pantryList, setPantryList] = useState<PantryItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
 useEffect(() => {
   const getPantryList = async () => {
@@ -25,6 +28,8 @@ useEffect(() => {
   }
   getPantryList();
 }, [pantryList])
+
+const onChangeSearch = query => setSearchQuery(query);
 
   if (inAddItem) {
     return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
@@ -54,7 +59,11 @@ useEffect(() => {
 
         <View style={styles.navBar}>
           <View style={styles.searchBar}>
-            <TextInput placeholder="Search" />
+            <Searchbar 
+            placeholder="Search" 
+            value={searchQuery}
+            onChangeText={onChangeSearch}
+            icon="magnify" />
           </View>
 
           <View style={styles.addBtnView}>
