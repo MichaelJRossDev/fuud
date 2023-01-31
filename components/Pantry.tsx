@@ -27,7 +27,7 @@ useEffect(() => {
 }, []);
 
   if (inAddItem) {
-    return <AddItem setInAddItem={setInAddItem} />;
+    return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
   } else if (inItemCard) {
     return (
       <ItemCard

@@ -10,9 +10,9 @@ import { useState, useEffect } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import ItemAdder from "./ItemAdder";
 import Scanner from "./Scanner";
+import { getPantry, PantryItem } from "../src/pantry";
 
-
-export default function AddItem({ setInAddItem }) {
+export default function AddItem({ setInAddItem,setPantryList }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
@@ -22,101 +22,115 @@ export default function AddItem({ setInAddItem }) {
   const [openScanner, setOpenScanner] = useState<boolean>(false);
 
   if (openScanner) {
-  return <Scanner setOpenScanner={setOpenScanner} />;
-} else {
-  
-  return (
-    <View style={styles.container}>
-      {show && (
-        <RNDateTimePicker
-          mode="date"
-          onChange={(event, date) => {
-            setExpiryDate(Number(date));
-            setShow(false);
-          }}
-          value={new Date()}
-        />
-      )}
-      <View style={styles.header}>
-        <Text style={styles.logo}>fuud.</Text>
-      </View>
-      <View style={styles.addOptions}>
-        <TouchableOpacity style={styles.addOptionsBtn} onPress={() => {
-          setOpenScanner(true)
-        }}>
-          <Text style={styles.addOptionsText}>Barcode</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addOptionsBtn}>
-          <Text style={styles.addOptionsText}>History</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.addItemInputs}>
-        <TextInput
-          onChangeText={(text) => {
-            setName(text);
-          }}
-          placeholder="Item Name"
-          style={styles.inputs}
-        />
-
-        <TouchableOpacity
-          style={styles.inputs}
-          onPress={() => {
-            setShow(true);
-          }}
-        >
-          <Text>Expiry: {(new Date(expiryDate)).toLocaleDateString()}</Text>
-        </TouchableOpacity>
-
-        <TextInput
-          onChangeText={(number) => {
-            setQuantity(parseInt(number));
-          }}
-          placeholder="Weight/quantity"
-          style={styles.inputs}
-        />
-        <TextInput
-          onChangeText={(string) => {
-            setUnit(string);
-          }}
-          placeholder="Units"
-          style={styles.inputs}
-        />
-
-        <View>
-          <Picker style={styles.inputs}
-            selectedValue={selectedCategory}
-            onValueChange={(itemValue) => {
-              setSelectedCategory(itemValue);
+    return <Scanner setOpenScanner={setOpenScanner} />;
+  } else {
+    return (
+      <View style={styles.container}>
+        {show && (
+          <RNDateTimePicker
+            mode="date"
+            onChange={(event, date) => {
+              setExpiryDate(Number(date));
+              setShow(false);
+            }}
+            value={new Date()}
+          />
+        )}
+        <View style={styles.header}>
+          <Text style={styles.logo}>fuud.</Text>
+        </View>
+        <View style={styles.addOptions}>
+          <TouchableOpacity
+            style={styles.addOptionsBtn}
+            onPress={() => {
+              setOpenScanner(true);
             }}
           >
-            <Picker.Item label="Category" value={"Please Select"} />
-            <Picker.Item label="Meat" value={"Meat"} />
-            <Picker.Item label="Vegetables" value={"Vegetables"} />
-            <Picker.Item label="Fruit" value={"Fruit"} />
-          </Picker>
+            <Text style={styles.addOptionsText}>Barcode</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.addOptionsBtn}>
+            <Text style={styles.addOptionsText}>History</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.addItemInputs}>
+          <TextInput
+            onChangeText={(text) => {
+              setName(text);
+            }}
+            placeholder="Item Name"
+            style={styles.inputs}
+          />
+
+          <TouchableOpacity
+            style={styles.inputs}
+            onPress={() => {
+              setShow(true);
+            }}
+          >
+            <Text>Expiry: {new Date(expiryDate).toLocaleDateString()}</Text>
+          </TouchableOpacity>
+
+          <TextInput
+            onChangeText={(number) => {
+              setQuantity(parseInt(number));
+            }}
+            placeholder="Weight/quantity"
+            style={styles.inputs}
+          />
+          <TextInput
+            onChangeText={(string) => {
+              setUnit(string);
+            }}
+            placeholder="Units"
+            style={styles.inputs}
+          />
+
+          <View>
+            <Picker
+              style={styles.inputs}
+              selectedValue={selectedCategory}
+              onValueChange={(itemValue) => {
+                setSelectedCategory(itemValue);
+              }}
+            >
+              <Picker.Item label="Category" value={"Please Select"} />
+              <Picker.Item label="Meat" value={"Meat"} />
+              <Picker.Item label="Vegetables" value={"Vegetables"} />
+              <Picker.Item label="Fruit" value={"Fruit"} />
+            </Picker>
+          </View>
+        </View>
+
+        <View style={styles.btnView}>
+          <TouchableOpacity
+            onPress={() => {
+              ItemAdder(name, quantity, selectedCategory, unit, expiryDate);
+              setInAddItem(false);
+             const getPantryList = async () => {
+               const pantry: any = await getPantry();
+               setPantryList(pantry);
+             };
+             getPantryList();
+            }}
+            style={styles.addItemBtn}
+          >
+            <Text style={styles.addItemText}> Add </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              setInAddItem(false);
+            }}
+            style={styles.cancelBtn}
+          >
+            <Text style={styles.cancelText}> Cancel </Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-      <View style={styles.btnView}>
-        <TouchableOpacity onPress={() => {ItemAdder(name, quantity, selectedCategory, unit, expiryDate)
-        setInAddItem(false)}} style={styles.addItemBtn}>
-          <Text style={styles.addItemText}> Add </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            setInAddItem(false);
-          }}
-          style={styles.cancelBtn}
-        >
-          <Text style={styles.cancelText}> Cancel </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}}
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -212,7 +226,4 @@ const styles = StyleSheet.create({
     height: 25,
     alignItems: "center",
   },
-
-
- 
 });
