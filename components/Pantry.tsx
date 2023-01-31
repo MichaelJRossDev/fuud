@@ -22,9 +22,9 @@ useEffect(() => {
   const getPantryList = async () => {
     const pantry: any = await getPantry();
     setPantryList(pantry);
-  };
+  }
   getPantryList();
-}, []);
+}, [pantryList])
 
   if (inAddItem) {
     return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
