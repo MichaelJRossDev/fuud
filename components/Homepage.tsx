@@ -2,6 +2,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import Pantry from "./Pantry";
 import Waste from "./Waste"
+import BottomNav from "./BottomNav";
 
 export default function Homepage() {
   const [inPantry, setInPantry] = useState<boolean>(false);
@@ -36,6 +37,7 @@ export default function Homepage() {
         </TouchableOpacity>
       </View>
       <View style={styles.notifications}></View>
+
     </View>
   );
 }
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
 
   notifications: {
     backgroundColor: "#95a99c",
-    height: "60%",
+    height: "20%",
     width: "80%",
     borderRadius: 25,
   },
