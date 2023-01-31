@@ -5,7 +5,8 @@ import Waste from "./Waste"
 
 export default function Homepage() {
   const [inPantry, setInPantry] = useState<boolean>(false);
-  const [inWaste, setInWaste] = useState<boolean>(false)
+  const [inWaste, setInWaste] = useState<boolean>(false);
+
 
   if (inPantry) {
     return <Pantry setInPantry={setInPantry} />;

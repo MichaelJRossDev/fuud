@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
     View,
     StyleSheet,
@@ -8,6 +9,8 @@ import {
 
 export default function Waste({ setInWaste }) {
 
+  
+  
     return (
         <View style={styles.container}>
             <View style={styles.header}>

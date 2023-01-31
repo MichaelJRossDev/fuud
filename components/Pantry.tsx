@@ -24,7 +24,7 @@ useEffect(() => {
     setPantryList(pantry);
   };
   getPantryList();
-}, []);
+}, [pantryList]);
 
   if (inAddItem) {
     return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
@@ -38,6 +38,7 @@ useEffect(() => {
         unit={itemInfo.unit}
         setInItemCard={setInItemCard}
         itemId={itemInfo.item_id}
+        setPantryList={setPantryList}
       />
     );
   } else {

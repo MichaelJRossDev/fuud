@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { deleteItemById } from "../src/pantry";
+import { addToGraveyard, deleteItemById, getPantry } from "../src/pantry";
 
 export default function ItemCard({
   name,
@@ -16,6 +16,7 @@ export default function ItemCard({
   unit,
   setInItemCard,
   itemId,
+  setPantryList,
 }) {
   const date = new Date(expiryDate);
   const currDate = Number(new Date());
@@ -50,18 +51,39 @@ export default function ItemCard({
         </Text>
       </View>
       <View style={styles.infoBtn}>
-        <TouchableOpacity style={styles.eatBtn} onPress={() => {
-          const deleteItem = async () => {
-            await deleteItemById(itemId)
-          };
-          deleteItem();
-        }}>
+        <TouchableOpacity
+          style={styles.eatBtn}
+          onPress={() => {
+            const deleteItem = async () => {
+              await deleteItemById(itemId);
+            };
+            deleteItem();
+            setInItemCard(false);
+            const getPantryList = async () => {
+              const pantry: any = await getPantry();
+              setPantryList(pantry);
+            };
+            getPantryList();
+          }}
+        >
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
             I've eaten this item
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.binBtn}>
+        <TouchableOpacity
+          style={styles.binBtn}
+          onPress={() => {
+            const binItem = async () => {
+              await addToGraveyard(itemId);
+              const pantry: any = await getPantry();
+               setPantryList(pantry);
+            };
+            binItem();
+            setInItemCard(false);
+           
+          }}
+        >
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
             This item was wasted
           </Text>
