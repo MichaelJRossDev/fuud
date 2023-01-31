@@ -48,7 +48,9 @@ export default function ItemCard({
         </Text>
       </View>
       <View style={styles.infoBtn}>
-        <TouchableOpacity style={styles.eatBtn}>
+        <TouchableOpacity style={styles.eatBtn} onPress={() => {
+          
+        }}>
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
             I've eaten this item
           </Text>
