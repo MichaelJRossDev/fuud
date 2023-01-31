@@ -53,6 +53,7 @@ export const getPantry = async () => {
     .catch((err) => {
       console.log(err);
     });
+  if (pantryItems === null) return [];
   return Object.values(pantryItems);
 };
 
@@ -97,10 +98,42 @@ export const addToGraveyard = async (id: number) => {
     .then((snapshot) => snapshot.val())
     .then(async (data) => {
       await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + id), data);
-      await deleteItemById(id)
+      await deleteItemById(id);
     })
     .catch((err) => {
       console.log(err);
     });
 };
 
+export const emptyGraveyard = async () => {
+  await set(ref(db, `${auth.currentUser!.uid}/graveyard/`), null);
+};
+
+
+export const getGraveyard = async () => {
+  let graveyardItems = {};
+  await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/"))
+    .then((snapshot) => snapshot.val())
+    .then((data) => {
+      graveyardItems = data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  if (graveyardItems === null) return [];
+  return Object.values(graveyardItems);
+};
+
+// export const getPantry = async () => {
+//   let pantryItems = {};
+//   await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/"))
+//     .then((snapshot) => snapshot.val())
+//     .then((data) => {
+//       pantryItems = data;
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+//   if (pantryItems === null) return [];
+//   return Object.values(pantryItems);
+// };
