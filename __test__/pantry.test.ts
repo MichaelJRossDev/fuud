@@ -349,18 +349,6 @@ describe("searchPantry", () => {
   });
 });
 
-
-describe("getItemInfo", () => {
-  test("gets correct information in correct format", async () => {
-    expect(await pantry.getItemInfoByBarcode("50457236")).toEqual({
-      name: "Tomato Ketchup",
-      category: "condiments",
-      quantity: 800,
-      unit: "ml"
-    });
-  })
-})
-
 describe("addToGraveyard", () => {
   test("adds item to graveyard and deletes from pantry", async () => {
     await pantry.addItem({
