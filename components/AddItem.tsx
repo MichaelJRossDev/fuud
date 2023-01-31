@@ -17,7 +17,7 @@ export default function AddItem({ setInAddItem }) {
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
   const [unit, setUnit] = useState<string>("");
-  const [expiryDate, setExpiryDate] = useState<any>(new Date());
+  const [expiryDate, setExpiryDate] = useState<number>(Number(new Date()));
   const [show, setShow] = useState<boolean>(false);
   const [openScanner, setOpenScanner] = useState<boolean>(false);
 
@@ -31,8 +31,7 @@ export default function AddItem({ setInAddItem }) {
         <RNDateTimePicker
           mode="date"
           onChange={(event, date) => {
-            setExpiryDate(date);
-            console.log(date);
+            setExpiryDate(Number(date));
             setShow(false);
           }}
           value={new Date()}
@@ -67,21 +66,21 @@ export default function AddItem({ setInAddItem }) {
             setShow(true);
           }}
         >
-          <Text>Expiry: {expiryDate.toDateString()}</Text>
+          <Text>Expiry: {(new Date(expiryDate)).toLocaleDateString()}</Text>
         </TouchableOpacity>
 
         <TextInput
           onChangeText={(number) => {
             setQuantity(parseInt(number));
           }}
-          placeholder="Weight"
+          placeholder="Weight/quantity"
           style={styles.inputs}
         />
         <TextInput
           onChangeText={(string) => {
             setUnit(string);
           }}
-          placeholder="Quantity"
+          placeholder="Units"
           style={styles.inputs}
         />
 

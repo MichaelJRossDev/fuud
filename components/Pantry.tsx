@@ -9,46 +9,22 @@ import {
 } from "react-native";
 import AddItem from "./AddItem";
 import ItemCard from "./ItemCard";
-import { useState } from "react";
-import { PantryItem } from "../src/pantry";
+import { useState, useEffect } from "react";
+import { getPantry, PantryItem } from "../src/pantry";
 
 export default function Pantry({ setInPantry }) {
   const [inAddItem, setInAddItem] = useState<boolean>(false);
-  const [itemInfo, setItemInfo] = useState<PantryItem>({
-    name: "Bananas",
-    expiry: Number(new Date(2023, 1, 1)),
-    category: "Fruit",
-    quantity: 5,
-    unit: "units",
-    item_id: 200,
-  });
+  const [itemInfo, setItemInfo] = useState<PantryItem>();
   const [inItemCard, setInItemCard] = useState<boolean>(false);
-  const [pantryList, setPantryList] = useState<PantryItem[]>([
-    {
-      name: "Bananas",
-      expiry: Number(new Date(2023, 1, 1)),
-      category: "Fruit",
-      quantity: 5,
-      unit: "units",
-      item_id: 200,
-    },
-    {
-      name: "Bread",
-      expiry: Number(new Date(2023, 1, 3)),
-      category: "Bread",
-      quantity: 1,
-      unit: "units",
-      item_id: 201,
-    },
-    {
-      name: "Chocolate",
-      expiry: Number(new Date(2023, 2, 1)),
-      category: "Sweets",
-      quantity: 2,
-      unit: "units",
-      item_id: 202,
-    },
-  ]);
+  const [pantryList, setPantryList] = useState<PantryItem[]>([]);
+
+useEffect(() => {
+  const getPantryList = async () => {
+    const pantry: any = await getPantry();
+    setPantryList(pantry);
+  };
+  getPantryList();
+}, []);
 
   if (inAddItem) {
     return <AddItem setInAddItem={setInAddItem} />;
@@ -112,7 +88,7 @@ export default function Pantry({ setInPantry }) {
                       <Text>Food item category image here</Text>
                     </View>
                     <Text style={styles.text}>{item.name}</Text>
-                    <Text style={styles.text}>{expiration.toDateString()}</Text>
+                    <Text style={styles.text}>{expiration.toLocaleDateString()}</Text>
                   </View>
                 </TouchableOpacity>
               );
