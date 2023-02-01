@@ -29,7 +29,7 @@ useEffect(() => {
     setReturnedList(pantry);
   }
   getPantryList();
-}, [])
+}, [pantryList])
   
 
 
