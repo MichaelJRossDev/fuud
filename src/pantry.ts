@@ -89,7 +89,7 @@ export const searchPantry = async (
   const searcher = new FuzzySearch(pantryArray, ["name", "category"], {
     caseSensitive: false,
   });
-  console.log(searcher.search(searchParameter));
+  //console.log(searcher.search(searchParameter));
   return searcher.search(searchParameter);
 };
 
