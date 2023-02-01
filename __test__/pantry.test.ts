@@ -91,7 +91,7 @@ describe("emptyPantry", () => {
   });
 });
 
-describe.only("getPantry", () => {
+describe("getPantry", () => {
   test("gets all items from pantry", async () => {
     for (let i = 0; i < 5; i++) {
       await pantry.addItem({
