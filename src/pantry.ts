@@ -56,7 +56,14 @@ export const getPantry = async () => {
       console.log(err);
     });
   if (pantryItems === null) return [];
-  return Object.values(pantryItems);
+  const pantryItemsValues = Object.values(pantryItems);
+  const comparisonFunction: any = (a: any, b: any) => {
+    if (a.expiry < b.expiry) return 1;
+    if (a.expiry > b.expiry) return -1;
+    if (a.expiry === b.expiry) return 0;
+  };
+  pantryItemsValues.sort(comparisonFunction);
+  return pantryItemsValues;
 };
 
 export const deleteItemById = async (id: number) => {
@@ -89,7 +96,6 @@ export const searchPantry = async (
   const searcher = new FuzzySearch(pantryArray, ["name", "category"], {
     caseSensitive: false,
   });
-  console.log(searcher.search(searchParameter));
   return searcher.search(searchParameter);
 };
 
@@ -157,7 +163,7 @@ export const addToGraveyard = async (id: number) => {
     .then((snapshot) => snapshot.val())
     .then(async (data) => {
       await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)), data);
-      await deleteItemById(id)
+      
       console.log("graveyard item set successfully");
     })
     .catch((err) => {
@@ -171,12 +177,9 @@ export const emptyGraveyard = async () => {
 
 
 export const getGraveyard = async () => {
-  console.log("in get graveyard")
   let graveyardItems = {};
-  console.log(auth.currentUser!.uid, "<< current user")
   await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/"))
     .then((snapshot) => {
-     console.log(snapshot)
       return snapshot.val()
     })
     .then((data) => {
