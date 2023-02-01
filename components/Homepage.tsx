@@ -1,12 +1,29 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pantry from "./Pantry";
 import Waste from "./Waste"
+import { getPantry, PantryItem } from "../src/pantry";
 
 export default function Homepage() {
   const [inPantry, setInPantry] = useState<boolean>(false);
   const [inWaste, setInWaste] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<PantryItem[]>([]);
 
+useEffect(() => {
+  const getNotifications = async () => {
+    const pantryList: any = await getPantry();
+    const notifyList = []
+    for(let i = 0; i < pantryList.length; i++) {
+      const currDate = Number(new Date());
+      const countdown = Math.round((pantryList[i].expiryDate - currDate) / 86400000);
+      if (countdown < 4) {
+        notifyList.push(pantryList[i])
+      }
+    }
+    console.log(notifyList,"<<<<<<")
+  }
+  getNotifications()
+}, [])
 
   if (inPantry) {
     return <Pantry setInPantry={setInPantry} />;
