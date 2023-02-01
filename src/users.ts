@@ -33,7 +33,6 @@ export const signOutUser = async () => {
 };
 
 export const sendResetPasswordEmail = async (email:string) => {
-  await signIn("michaeljrossdev@gmail.com", "password", () => {});
     await sendPasswordResetEmail(auth, email);
   }
 
