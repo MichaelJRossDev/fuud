@@ -194,16 +194,3 @@ export const getGraveyard = async () => {
   return Object.values(graveyardItems);
 };
 
-// export const getPantry = async () => {
-//   let pantryItems = {};
-//   await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/"))
-//     .then((snapshot) => snapshot.val())
-//     .then((data) => {
-//       pantryItems = data;
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-//   if (pantryItems === null) return [];
-//   return Object.values(pantryItems);
-// };
