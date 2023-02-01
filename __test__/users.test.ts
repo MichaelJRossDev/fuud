@@ -1,7 +1,8 @@
 import * as users from "../src/users";
 import { getAuth } from "firebase-admin/auth";
 import { auth } from "../config/firebaseConfig";
-import { signOut } from "firebase/auth";
+import { sendPasswordResetEmail, signOut } from "firebase/auth";
+import { send } from "process";
 
 
 const admin = require("firebase-admin");
