@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import Pantry from "./Pantry";
 import Waste from "./Waste"
@@ -15,15 +15,15 @@ useEffect(() => {
     const notifyList = []
     for(let i = 0; i < pantryList.length; i++) {
       const currDate = Number(new Date());
-      const countdown = Math.round((pantryList[i].expiryDate - currDate) / 86400000);
+      const countdown = Math.round((pantryList[i].expiry - currDate) / 86400000);
       if (countdown < 4) {
         notifyList.push(pantryList[i])
       }
     }
-    console.log(notifyList,"<<<<<<")
+    setNotifications(notifyList)
   }
   getNotifications()
-}, [])
+}, [inPantry, inWaste])
 
   if (inPantry) {
     return <Pantry setInPantry={setInPantry} />;
@@ -47,13 +47,38 @@ useEffect(() => {
         >
           <Text style={styles.homeButtonText}>Pantry</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.homeButtons} onPress={() => {
+        <TouchableOpacity
+          style={styles.homeButtons}
+          onPress={() => {
             setInWaste(true);
-        }}>
+          }}
+        >
           <Text style={styles.homeButtonText}>Waste</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.notifications}></View>
+
+      <View style={styles.wasteList}>
+        <FlatList
+          data={notifications}
+          renderItem={({ item }) => {
+            const expiration = new Date(item.expiry);
+            return (
+              <TouchableOpacity style={styles.display} key={item.item_id}>
+                <View>
+                  <View style={styles.image}>
+                    <Text>Food item category image here</Text>
+                  </View>
+                  <Text style={styles.text}>{item.name}</Text>
+                  <Text style={styles.text}>
+                    {expiration.toLocaleDateString()}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+          numColumns={2}
+        />
+      </View>
     </View>
   );
 }
@@ -113,5 +138,34 @@ const styles = StyleSheet.create({
     height: "60%",
     width: "80%",
     borderRadius: 25,
+  },
+  wasteList: {
+    marginTop: 10,
+    backgroundColor: "#F5f6f4",
+    height: "55%",
+    width: "90%",
+    borderRadius: 25,
+    alignSelf: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    display: "flex",
+  },
+  display: {
+    borderRadius: 15,
+    width: "45%",
+    margin: 10,
+    backgroundColor: "#95a99c",
+    padding: 5,
+    alignItems: "center",
+  },
+
+  image: {
+    borderWidth: 1,
+    backgroundColor: "#fff",
+  },
+
+  text: {
+    fontWeight: "bold",
+    alignSelf: "center",
   },
 });
