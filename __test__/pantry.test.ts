@@ -2,6 +2,7 @@ import * as pantry from "../src/pantry";
 import { get, ref, getDatabase, child } from "firebase/database";
 import { app, db, auth } from "../config/firebaseConfig";
 import { signIn, signOutUser } from "../src/users";
+import { onlyChanged } from "../jest.config";
 
 beforeAll(async () => {
   await signOutUser();
@@ -14,6 +15,7 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await pantry.emptyPantry();
+  await pantry.emptyGraveyard();
   await signOutUser();
 });
 
@@ -101,11 +103,9 @@ describe("getPantry", () => {
         item_id: Number(Date.now()),
       });
     }
-    // const list = await pantry.getPantry();
     const pantryItems = await pantry.getPantry();
-    const values = Object.values(pantryItems);
-    expect(values).toHaveLength(5);
-    expect(values).toEqual(
+    expect(pantryItems).toHaveLength(5);
+    expect(pantryItems).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           name: expect.any(String),
@@ -371,8 +371,8 @@ describe("addToGraveyard", () => {
       unit: "unit",
       item_id: 4,
     });
-    
-    await pantry.addToGraveyard(4)
+
+    await pantry.addToGraveyard(4);
 
     await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/" + "4"))
       .then((snapshot) => snapshot.val())
@@ -389,9 +389,65 @@ describe("addToGraveyard", () => {
     await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + "4"))
       .then((snapshot) => snapshot.val())
       .then((data) => {
-        expect(data).toEqual(
-          null
-        );
+        expect(data).toEqual(null);
       });
+  });
+});
+
+describe("emptyGraveyard", () => {
+  test("empties graveyard", async () => {
+    await pantry.addItem({
+      name: "pineapple",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "Fruit",
+      quantity: 4,
+      unit: "unit",
+      item_id: 4,
+    });
+
+    await pantry.addToGraveyard(4);
+
+    await pantry.emptyGraveyard();
+
+    const graveyardItems = await pantry.getGraveyard();
+    expect(graveyardItems).toEqual([]);
+  });
+});
+
+describe("getGraveyard", () => {
+  test("gets all items from graveyard", async () => {
+    const itemIDArray = [];
+
+    await pantry.emptyGraveyard();
+    for (let i = 0; i < 5; i++) {
+      await pantry.addItem({
+        name: i.toString(),
+        expiry: Number(new Date(2024, 1, i)),
+        category: (i * 2).toString(),
+        quantity: i * 3,
+        unit: "Lightyears",
+        item_id: Number(Date.now()),
+      });
+    }
+
+    const pantryItems: Array<any> = await pantry.getPantry();
+    for (let i = 0; i < pantryItems.length; i++) {
+      await pantry.addToGraveyard(pantryItems[i].item_id);
+    }
+
+    const graveyardItems = await pantry.getGraveyard();
+    expect(graveyardItems).toHaveLength(5);
+    expect(graveyardItems).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: expect.any(String),
+          expiry: expect.any(Number),
+          category: expect.any(String),
+          quantity: expect.any(Number),
+          unit: expect.any(String),
+          item_id: expect.any(Number),
+        }),
+      ])
+    );
   });
 });

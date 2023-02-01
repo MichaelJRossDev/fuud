@@ -8,6 +8,7 @@ import { app, db, auth } from "../config/firebaseConfig";
 import { set, ref, get, child } from "firebase/database";
 
 import FuzzySearch from "fuzzy-search";
+import { Console } from "console";
 
 const off = require("openfoodfacts-nodejs");
 
@@ -59,6 +60,7 @@ export const getPantry = async () => {
     .catch((err) => {
       console.log(err);
     });
+  if (pantryItems === null) return [];
   return Object.values(pantryItems);
 };
 
@@ -153,15 +155,55 @@ export const getItemInfoByBarcode = async (barcode: string) => {
 }
 
 export const addToGraveyard = async (id: number) => {
+  
   await get(
     child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + String(id))
   )
     .then((snapshot) => snapshot.val())
     .then(async (data) => {
-      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + id), data);
+      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)), data);
       await deleteItemById(id)
+      console.log("graveyard item set successfully");
     })
     .catch((err) => {
       console.log(err);
     });
 };
+
+export const emptyGraveyard = async () => {
+  await set(ref(db, `${auth.currentUser!.uid}/graveyard/`), null);
+};
+
+
+export const getGraveyard = async () => {
+  console.log("in get graveyard")
+  let graveyardItems = {};
+  console.log(auth.currentUser!.uid, "<< current user")
+  await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/"))
+    .then((snapshot) => {
+     console.log(snapshot)
+      return snapshot.val()
+    })
+    .then((data) => {
+      graveyardItems = data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  if (graveyardItems === null) return [];
+  return Object.values(graveyardItems);
+};
+
+// export const getPantry = async () => {
+//   let pantryItems = {};
+//   await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/"))
+//     .then((snapshot) => snapshot.val())
+//     .then((data) => {
+//       pantryItems = data;
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+//   if (pantryItems === null) return [];
+//   return Object.values(pantryItems);
+// };
