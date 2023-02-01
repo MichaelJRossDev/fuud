@@ -59,11 +59,6 @@ export default function ItemCard({
             };
             deleteItem();
             setInItemCard(false);
-            const getPantryList = async () => {
-              const pantry: any = await getPantry();
-              setPantryList(pantry);
-            };
-            getPantryList();
           }}
         >
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
@@ -76,12 +71,13 @@ export default function ItemCard({
           onPress={() => {
             const binItem = async () => {
               await addToGraveyard(itemId);
-              const pantry: any = await getPantry();
-               setPantryList(pantry);
+            };
+            const deleteItem = async () => {
+              await deleteItemById(itemId);
             };
             binItem();
+            deleteItem();
             setInItemCard(false);
-           
           }}
         >
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>

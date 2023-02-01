@@ -10,21 +10,38 @@ import {
 import AddItem from "./AddItem";
 import ItemCard from "./ItemCard";
 import { useState, useEffect } from "react";
-import { getPantry, PantryItem } from "../src/pantry";
+import { addItem, getPantry, PantryItem, searchPantry } from "../src/pantry";
+import {Searchbar} from "react-native-paper"
+
 
 export default function Pantry({ setInPantry }) {
   const [inAddItem, setInAddItem] = useState<boolean>(false);
   const [itemInfo, setItemInfo] = useState<PantryItem>();
   const [inItemCard, setInItemCard] = useState<boolean>(false);
   const [pantryList, setPantryList] = useState<PantryItem[]>([]);
-
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [returnedList, setReturnedList] = useState<PantryItem[]>([])
+  
 useEffect(() => {
   const getPantryList = async () => {
     const pantry: any = await getPantry();
     setPantryList(pantry);
-  };
+    setReturnedList(pantry);    
+  }
   getPantryList();
-}, [pantryList]);
+}, [inItemCard, inAddItem])
+  
+
+
+  useEffect(() => {
+    const searchList = async () => {
+      const results = await searchPantry(pantryList, searchQuery);
+      setReturnedList(results)
+    }
+    searchList();
+  }, [searchQuery])
+
+const onChangeSearch = query => setSearchQuery(query);
 
   if (inAddItem) {
     return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
@@ -55,8 +72,12 @@ useEffect(() => {
         </View>
 
         <View style={styles.navBar}>
-          <View style={styles.searchBar}>
-            <TextInput placeholder="Search" />
+          <View style={styles.searchBar}> 
+            <Searchbar 
+            placeholder="Search" 
+            value={searchQuery}
+            onChangeText={onChangeSearch}
+            icon="magnify" />
           </View>
 
           <View style={styles.addBtnView}>
@@ -73,7 +94,8 @@ useEffect(() => {
 
         <View style={styles.pantryList}>
           <FlatList
-            data={pantryList}
+            data={returnedList}
+            extraData={returnedList}
             renderItem={({ item }) => {
               const expiration = new Date(item.expiry);
               return (
@@ -149,7 +171,6 @@ const styles = StyleSheet.create({
     width: "60%",
     height: 40,
     margin: 5,
-    borderWidth: 1,
     padding: 10,
   },
 
@@ -206,6 +227,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#fff",
   },
+  
   text: {
     fontWeight: "bold",
     alignSelf: "center",
