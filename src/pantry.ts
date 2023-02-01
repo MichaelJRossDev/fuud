@@ -56,7 +56,14 @@ export const getPantry = async () => {
       console.log(err);
     });
   if (pantryItems === null) return [];
-  return Object.values(pantryItems);
+  const pantryItemsValues = Object.values(pantryItems)
+  const comparisonFunction:any = (a:any, b:any) => {
+    if (a.expiry < b.expiry) return 1
+    if (a.expiry > b.expiry) return -1
+    if (a.expiry === b.expiry) return 0
+  }
+  pantryItemsValues.sort(comparisonFunction)
+  return pantryItemsValues
 };
 
 export const deleteItemById = async (id: number) => {
