@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
     View,
     StyleSheet,
@@ -6,9 +6,19 @@ import {
     TouchableOpacity,
     TextInput,
   } from "react-native";
+import { getGraveyard } from "../src/pantry";
+import { PantryItem } from "../src/pantry";
 
 export default function Waste({ setInWaste }) {
+       const [wasteList, setWasteList] = useState<PantryItem[]>([]);
 
+       useEffect(() => {
+         const getWasteList = async () => {
+           const waste: any = await getGraveyard();
+           setWasteList(waste);
+         };
+         getWasteList();
+       }, []);
   
   
     return (
@@ -21,10 +31,32 @@ export default function Waste({ setInWaste }) {
       <View>
         <Text style={styles.slogan}>Welcome to the Graveyard</Text>
       </View>
-      <View>
-        <Text>Insert Timeframe functionality</Text>
-      </View>
-      <View style={styles.pantryList}></View>
+     <View style={styles.pantryList}>
+          <FlatList
+            data={pantryList}
+            renderItem={({ item }) => {
+              const expiration = new Date(item.expiry);
+              return (
+                <TouchableOpacity
+                  style={styles.display}
+                  key={item.item_id}
+                  onPress={() => {
+                    setItemInfo(item);
+                    setInItemCard(true);
+                  }}
+                >
+                  <View>
+                    <View style={styles.image}>
+                      <Text>Food item category image here</Text>
+                    </View>
+                    <Text style={styles.text}>{item.name}</Text>
+                    <Text style={styles.text}>{expiration.toLocaleDateString()}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            numColumns={2}
+          />
         </View>
     )
 }
