@@ -386,11 +386,7 @@ describe("addToGraveyard", () => {
           item_id: 4,
         });
       });
-    await get(child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + "4"))
-      .then((snapshot) => snapshot.val())
-      .then((data) => {
-        expect(data).toEqual(null);
-      });
+
   });
 });
 

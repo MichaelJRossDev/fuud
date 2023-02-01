@@ -54,6 +54,8 @@ const onChangeSearch = query => setSearchQuery(query);
         quantity={itemInfo.quantity}
         unit={itemInfo.unit}
         setInItemCard={setInItemCard}
+        itemId={itemInfo.item_id}
+        setPantryList={setPantryList}
       />
     );
   } else {
@@ -225,6 +227,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#fff",
   },
+  
   text: {
     fontWeight: "bold",
     alignSelf: "center",

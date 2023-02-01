@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
+import { addToGraveyard, deleteItemById, getPantry } from "../src/pantry";
 
 export default function ItemCard({
   name,
@@ -14,6 +15,8 @@ export default function ItemCard({
   quantity,
   unit,
   setInItemCard,
+  itemId,
+  setPantryList,
 }) {
   const date = new Date(expiryDate);
   const currDate = Number(new Date());
@@ -48,13 +51,35 @@ export default function ItemCard({
         </Text>
       </View>
       <View style={styles.infoBtn}>
-        <TouchableOpacity style={styles.eatBtn}>
+        <TouchableOpacity
+          style={styles.eatBtn}
+          onPress={() => {
+            const deleteItem = async () => {
+              await deleteItemById(itemId);
+            };
+            deleteItem();
+            setInItemCard(false);
+          }}
+        >
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
             I've eaten this item
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.binBtn}>
+        <TouchableOpacity
+          style={styles.binBtn}
+          onPress={() => {
+            const binItem = async () => {
+              await addToGraveyard(itemId);
+            };
+            const deleteItem = async () => {
+              await deleteItemById(itemId);
+            };
+            binItem();
+            deleteItem();
+            setInItemCard(false);
+          }}
+        >
           <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
             This item was wasted
           </Text>
