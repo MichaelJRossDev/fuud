@@ -10,7 +10,7 @@ import {
 import AddItem from "./AddItem";
 import ItemCard from "./ItemCard";
 import { useState, useEffect } from "react";
-import { addItem, getPantry, PantryItem, searchPantry } from "../src/pantry";
+import { addItem, getItemInfoByBarcode, getPantry, PantryItem, searchPantry } from "../src/pantry";
 import {Searchbar} from "react-native-paper"
 
 
@@ -26,12 +26,12 @@ useEffect(() => {
   const getPantryList = async () => {
     const pantry: any = await getPantry();
     setPantryList(pantry);
-    setReturnedList(pantry);    
+    setReturnedList(pantry);
   }
   getPantryList();
 }, [inItemCard, inAddItem])
   
-
+ 
 
   useEffect(() => {
     const searchList = async () => {
@@ -41,8 +41,8 @@ useEffect(() => {
     searchList();
   }, [searchQuery])
 
-const onChangeSearch = query => setSearchQuery(query);
-
+  const onChangeSearch = query => setSearchQuery(query);
+  
   if (inAddItem) {
     return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
   } else if (inItemCard) {
