@@ -9,7 +9,9 @@ import { set, ref, get, child } from "firebase/database";
 
 import FuzzySearch from "fuzzy-search";
 
-import axios from "axios"
+import axios from "axios";
+
+import { recipes } from "../data/recipes";
 
 export interface PantryItem {
   name: string;
@@ -92,71 +94,79 @@ export const searchPantry = async (
   return searcher.search(searchParameter);
 };
 
-
 export const getItemInfoByBarcode = async (barcode: string) => {
-  let item: object = {}
-  let quantityJustNumber: string = ""
-  let quantityJustUnit:string = ""
-  await axios.get(`https://world.openfoodfacts.org/api/v2/product/${barcode}`).then((itemInfo: any) => {
-    console.log(itemInfo)
-    if (itemInfo.status === "0") {
-      console.log("item not found")
-      return {
-        name: "",
-        category: "",
-        quantity: 0,
-        unit: ""
-      }
-    } else {
-      
-      if (itemInfo.data.product.quantity) {
-        if (itemInfo.data.product.quantity.includes(",")) {
-          const quantityStringArray:Array<string> = itemInfo.data.product.quantity.split(",")
-          const quantityWithUnits:string = quantityStringArray[0]
-          const quantityUnitArray:Array<string> = quantityWithUnits.split(" ")
-          quantityJustNumber = quantityUnitArray[0]
-          quantityJustUnit = quantityUnitArray[1]
-        } else {
-          const quantityUnitArray:Array<string> = itemInfo.data.product.quantity.split(" ")
-          quantityJustNumber = quantityUnitArray[0]
-          quantityJustUnit = quantityUnitArray[1]
+  let item: object = {};
+  let quantityJustNumber: string = "";
+  let quantityJustUnit: string = "";
+  await axios
+    .get(`https://world.openfoodfacts.org/api/v2/product/${barcode}`)
+    .then((itemInfo: any) => {
+      if (itemInfo.status === "0") {
+        console.log("item not found");
+        return {
+          name: "",
+          category: "",
+          quantity: 0,
+          unit: "",
+        };
+      } else {
+        if (itemInfo.data.product.quantity) {
+          if (itemInfo.data.product.quantity.includes(",")) {
+            const quantityStringArray: Array<string> =
+              itemInfo.data.product.quantity.split(",");
+            const quantityWithUnits: string = quantityStringArray[0];
+            const quantityUnitArray: Array<string> =
+              quantityWithUnits.split(" ");
+            quantityJustNumber = quantityUnitArray[0];
+            quantityJustUnit = quantityUnitArray[1];
+          } else {
+            const quantityUnitArray: Array<string> =
+              itemInfo.data.product.quantity.split(" ");
+            quantityJustNumber = quantityUnitArray[0];
+            quantityJustUnit = quantityUnitArray[1];
+          }
         }
-      }
 
-      let category: string = ""
-      console.log(itemInfo.data.product.category, "category name");
+        let category: string = "";
 
-
-      if (itemInfo.data.product.categories_hierarchy) {
-        if (itemInfo.data.product.categories_hierarchy[0].includes(":")) {
-          let categoryStringArray: Array<string> = itemInfo.data.product.categories_hierarchy[0].split(":")
-          category = categoryStringArray[1]
-        } else {
-          category = itemInfo.data.product.categories_hierarchy[0]
+        if (itemInfo.data.product.categories_hierarchy) {
+          if (itemInfo.data.product.categories_hierarchy[0].includes(":")) {
+            let categoryStringArray: Array<string> =
+              itemInfo.data.product.categories_hierarchy[0].split(":");
+            category = categoryStringArray[1];
+          } else {
+            category = itemInfo.data.product.categories_hierarchy[0];
+          }
         }
+
+        item = {
+          name: itemInfo.data.product.product_name
+            ? itemInfo.data.product.product_name
+            : "",
+          category: category ? category : "",
+          quantity:
+            quantityJustNumber && !Number.isNaN(Number(quantityJustNumber))
+              ? Number(quantityJustNumber)
+              : 1,
+          unit: quantityJustUnit ? quantityJustUnit : "unit",
+        };
       }
-      
-      item = {
-        name: itemInfo.data.product.product_name ? itemInfo.data.product.product_name : "",
-        category: category,
-        quantity: quantityJustNumber ? Number(quantityJustNumber) : 0,
-        unit: quantityJustUnit
-      }
-    
-    }
-  }).catch(console.log)
+    })
+    .catch(console.log);
   return item;
-}
+};
 
 export const addToGraveyard = async (id: number) => {
-  
   await get(
     child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + String(id))
   )
     .then((snapshot) => snapshot.val())
     .then(async (data) => {
-      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)), data);
-      
+      await set(
+        ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)),
+        data
+      );
+
       console.log("graveyard item set successfully");
     })
     .catch((err) => {
@@ -168,12 +178,11 @@ export const emptyGraveyard = async () => {
   await set(ref(db, `${auth.currentUser!.uid}/graveyard/`), null);
 };
 
-
 export const getGraveyard = async () => {
   let graveyardItems = {};
   await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/"))
     .then((snapshot) => {
-      return snapshot.val()
+      return snapshot.val();
     })
     .then((data) => {
       graveyardItems = data;
@@ -183,4 +192,35 @@ export const getGraveyard = async () => {
     });
   if (graveyardItems === null) return [];
   return Object.values(graveyardItems);
+};
+
+export const suggestRecipes = async () => {
+  const currentPantry = await getPantry();
+  const recipesWithScores: Array<object> = [];
+  recipes.forEach((recipe: any) => {
+    let score = 0;
+    let ingredients = recipe.ingredients.ingredient.map(
+      (ingredient: any) => ingredient.food_name
+    );
+    currentPantry.forEach((item: any) => {
+      ingredients.forEach((ingredient: any) => {
+        if (!ingredient.toLowerCase().includes(item.toLowerCase)) {
+          score++;
+        }
+      });
+    });
+    recipes.push(recipesWithScores.push({ recipe, score }));
+  });
+  recipesWithScores.sort((a: any, b: any) => b.score - a.score);
+  const recipesShortForm = recipesWithScores.map((recipe: any) => {
+    return {
+      recipe_name: recipe.recipe.recipe_name,
+      recipe_image_url: Array.isArray(recipe.recipe.recipe_images.recipe_image)
+        ? recipe.recipe.recipe_images.recipe_image[0]
+        : recipe.recipe.recipe_images.recipe_image,
+      recipe_URL: recipe.recipe.recipe_url
+    };
+  });
+  if (recipesShortForm.length < 5) return recipesShortForm;
+  return recipesShortForm.slice(0, 5);
 };
