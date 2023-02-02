@@ -8,6 +8,7 @@ import {
   } from "react-native";
 import { getGraveyard } from "../src/pantry";
 import { PantryItem } from "../src/pantry";
+import { Button, Card } from "react-native-paper";
 
 
 export default function Waste({ setInWaste }) {
@@ -23,44 +24,59 @@ export default function Waste({ setInWaste }) {
   
   
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-        <TouchableOpacity  onPress={() => {setInWaste(false)}}>
-          <Text style={styles.logo}>fuud.</Text>
-        </TouchableOpacity>
-      </View>
-  
-     <View style={styles.wasteList}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => {
+              setInWaste(false);
+            }}
+          >
+            <Text style={styles.logo}>fuud.</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.wasteList}>
           <FlatList
             data={wasteList}
             renderItem={({ item }) => {
               const expiration = new Date(item.expiry);
               return (
-                <TouchableOpacity
-                  style={styles.display}
-                  key={item.item_id}
-                >
+                <Card style={styles.display} key={item.item_id}>
                   <View>
-                    <View style={styles.image}>
-                      <Text>Food item category image here</Text>
-                    </View>
                     <Text style={styles.text}>{item.name}</Text>
-                    <Text style={styles.text}>{expiration.toLocaleDateString()}</Text>
+                    <Text style={styles.text}>
+                      {expiration.toLocaleDateString()}
+                    </Text>
                   </View>
-                </TouchableOpacity>
+                </Card>
               );
             }}
-            numColumns={2}
           />
         </View>
+        <View>
+          <Button
+            onPress={() => {
+              setInWaste(false);
+            }}
+            style={styles.homeBtn}
+            icon="home"
+            labelStyle={{ color: "#fff" }}
+          >
+            <Text
+              style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}
+            >
+              Dashboard
+            </Text>
+          </Button>
+        </View>
       </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5f6f4",
+    backgroundColor: "#FBF8DE",
     flexDirection: "column",
     alignItems: "center",
   },
@@ -86,15 +102,6 @@ const styles = StyleSheet.create({
     width: "90%",
   },
 
-  pantryList: {
-    marginTop: 10,
-    backgroundColor: "#95a99c",
-    height: "70%",
-    width: "90%",
-    borderRadius: 25,
-    alignSelf: "center",
-  },
-
   addItemBtn: {
     width: "80%",
     borderRadius: 25,
@@ -110,8 +117,8 @@ const styles = StyleSheet.create({
   },
 
   wasteList: {
-    marginTop: 10,
-    backgroundColor: "#F5f6f4",
+    marginTop: 40,
+    backgroundColor: "#FBF8DE",
     height: "55%",
     width: "90%",
     borderRadius: 25,
@@ -123,20 +130,27 @@ const styles = StyleSheet.create({
 
   display: {
     borderRadius: 15,
-    width: "45%",
     margin: 10,
-    backgroundColor: "#95a99c",
+    backgroundColor: "#4A6855",
     padding: 5,
-    alignItems: "center",
+    alignSelf: "center",
+    width: "80%",
+    alignContent: "center",
   },
 
-  image: {
-    borderWidth: 1,
-    backgroundColor: "#fff",
-  },
-  
   text: {
     fontWeight: "bold",
     alignSelf: "center",
+    color: "#F5F6F4",
+  },
+
+  homeBtn: {
+    width: "40%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    backgroundColor: "#d08651",
   },
 });

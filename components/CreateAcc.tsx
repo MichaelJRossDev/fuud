@@ -6,14 +6,14 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import {createUser} from "../src/users"
+import { createUser } from "../src/users";
 
-export default function CreateAcc({setCreateAcc}) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+export default function CreateAcc({ setCreateAcc }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    return (
-        <View style={styles.container}>
+  return (
+    <View style={styles.container}>
       <TextInput
         style={styles.TextInput}
         placeholder="Email"
@@ -29,53 +29,74 @@ export default function CreateAcc({setCreateAcc}) {
         onChangeText={(password) => setPassword(password)}
       />
 
-<TouchableOpacity onPress={() => {
-  createUser(email, password)
-  setCreateAcc(false)}} 
-  style={styles.loginBtn}>
-      <Text style={styles.loginText}> Create Account</Text>
+      <TouchableOpacity
+        onPress={() => {
+          createUser(email, password);
+          setCreateAcc(false);
+        }}
+        style={styles.loginBtn}
+      >
+        <Text style={styles.loginText}> Create Account</Text>
       </TouchableOpacity>
-      </View>
-    )}
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        backgroundColor: "#4A6855",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-    
-      inputView: {
-        backgroundColor: "#d08651",
-        borderRadius: 30,
-        width: "70%",
-        height: 45,
-        marginBottom: 20,
-        alignItems: "center",
-      },
-    
-      TextInput: {
-        width: "70%",
-        borderRadius: 20,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 40,
-        backgroundColor: "#95a99c",
-        textAlign: "center",
-      },
-    
-      loginBtn: {
-        width:"80%",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:40,
-        backgroundColor:"#d08651",
-      },
-    
-      loginText: {
-        color: "#f5f6f4",
-      },
-    });
+      
+        <TouchableOpacity
+          onPress={() => {
+            setCreateAcc(false);
+          }}
+        >
+          <Text style={styles.cancelText}> Cancel </Text>
+        </TouchableOpacity>
+   
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#4A6855",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  inputView: {
+    backgroundColor: "#d08651",
+    borderRadius: 30,
+    width: "70%",
+    height: 45,
+    marginBottom: 20,
+    alignItems: "center",
+  },
+
+  TextInput: {
+    width: "70%",
+    borderRadius: 20,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    backgroundColor: "#95a99c",
+    textAlign: "center",
+  },
+
+  loginBtn: {
+    width: "80%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    backgroundColor: "#d08651",
+  },
+
+  loginText: {
+    color: "#f5f6f4",
+  },
+
+  cancelText: {
+    height: 30,
+    margin: 15,
+    color: "#F5F6F4",
+  },
+
+});
