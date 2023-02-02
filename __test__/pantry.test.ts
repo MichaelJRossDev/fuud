@@ -358,7 +358,7 @@ describe("getItemInfo", () => {
       quantity: 800,
       unit: "ml"
     });
-  })
+  }, 60000)
 })
 
 describe("addToGraveyard", () => {

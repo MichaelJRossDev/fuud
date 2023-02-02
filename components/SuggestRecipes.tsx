@@ -3,22 +3,23 @@ import {
     Text,
     View,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    Image
   } from "react-native";
 import { useState, useEffect } from "react";  
 import { suggestRecipes } from "../src/pantry"
 
 export default function SuggestRecipes({ setInRecipes }) {
 
-    const [recipes, setRecipes] = useState()
+    const [recipes, setRecipes] = useState<any>()
 
     useEffect(() => {
         const getRecipes = async () => {
-            // const recipesList = await suggestRecipes()
-            // setRecipes(recipesList)
-            console.log(recipes)
+            const recipesList = await suggestRecipes()
+            setRecipes(recipesList)
         }
         getRecipes()
+        console.log(recipes)
         }, [])
 
     return (
@@ -33,7 +34,20 @@ export default function SuggestRecipes({ setInRecipes }) {
           </TouchableOpacity>
             </View>
             <View>
-
+                <FlatList
+                    data={recipes}
+                    renderItem={({ item }) => {
+                        return (
+                            <TouchableOpacity
+                            key={item.recipe_name}>
+                                <Text>{item.recipe_name}</Text>
+                                <Image source={{uri:item.recipe_image_url}} style={{width:"50%"}}/>
+                                <Text>{item.recipe_image_url}</Text>
+                                <Text>{item.recipe_URL}</Text>
+                            </TouchableOpacity>
+                        )}
+                    }
+                        />
                 
             </View>
         </View>

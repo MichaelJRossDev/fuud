@@ -11,7 +11,7 @@ import FuzzySearch from "fuzzy-search";
 
 import axios from "axios";
 
-import { recipes } from "../data/recipes";
+import { recipes } from "../data/fullRecipes";
 
 export interface PantryItem {
   name: string;
@@ -216,7 +216,7 @@ export const suggestRecipes = async () => {
         }
       });
     });
-    recipes.push(recipesWithScores.push({ recipe, score }));
+    recipesWithScores.push({ recipe, score });
   });
   recipesWithScores.sort((a: any, b: any) => b.score - a.score);
   const recipesShortForm = recipesWithScores.map((recipe: any) => {
