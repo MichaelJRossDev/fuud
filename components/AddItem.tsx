@@ -22,7 +22,15 @@ export default function AddItem({ setInAddItem,setPantryList }) {
   const [openScanner, setOpenScanner] = useState<boolean>(false);
 
   if (openScanner) {
-    return <Scanner setOpenScanner={setOpenScanner} />;
+    return (
+      <Scanner
+        setOpenScanner={setOpenScanner}
+        setName={setName}
+        setQuantity={setQuantity}
+        setUnit={setUnit}
+        setShow={setShow}
+      />
+    );
   } else {
     return (
       <View style={styles.container}>
@@ -60,6 +68,7 @@ export default function AddItem({ setInAddItem,setPantryList }) {
             }}
             placeholder="Item Name"
             style={styles.inputs}
+            value={name}
           />
 
           <TouchableOpacity
@@ -77,29 +86,18 @@ export default function AddItem({ setInAddItem,setPantryList }) {
             }}
             placeholder="Weight/quantity"
             style={styles.inputs}
+            value={quantity.toString()}
           />
+
           <TextInput
             onChangeText={(string) => {
               setUnit(string);
             }}
             placeholder="Units"
             style={styles.inputs}
+            value={unit}
           />
 
-          <View>
-            <Picker
-              style={styles.inputs}
-              selectedValue={selectedCategory}
-              onValueChange={(itemValue) => {
-                setSelectedCategory(itemValue);
-              }}
-            >
-              <Picker.Item label="Category" value={"Please Select"} />
-              <Picker.Item label="Meat" value={"Meat"} />
-              <Picker.Item label="Vegetables" value={"Vegetables"} />
-              <Picker.Item label="Fruit" value={"Fruit"} />
-            </Picker>
-          </View>
         </View>
 
         <View style={styles.btnView}>
@@ -107,11 +105,11 @@ export default function AddItem({ setInAddItem,setPantryList }) {
             onPress={() => {
               ItemAdder(name, quantity, selectedCategory, unit, expiryDate);
               setInAddItem(false);
-             const getPantryList = async () => {
-               const pantry: any = await getPantry();
-               setPantryList(pantry);
-             };
-             getPantryList();
+              const getPantryList = async () => {
+                const pantry: any = await getPantry();
+                setPantryList(pantry);
+              };
+              getPantryList();
             }}
             style={styles.addItemBtn}
           >
