@@ -447,3 +447,83 @@ describe("getGraveyard", () => {
     );
   });
 });
+
+describe('suggestRecipes', () => {
+  test("suggestedRecipes come back in correct format", async () => {
+    await pantry.addItem({
+      name: "Dry Chicken Broth",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "",
+      quantity: 4,
+      unit: "unit",
+    });
+    await pantry.addItem({
+      name: "Potato",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "meat",
+      quantity: 4,
+      unit: "kg",
+    });
+    await pantry.addItem({
+      name: "Kale",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "vegetable",
+      quantity: 400,
+      unit: "g",
+    });
+    await pantry.addItem({
+      name: "Sausage",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "fruit",
+      quantity: 8,
+      unit: "units",
+    });
+    await pantry.addItem({
+      name: "Onion",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "condiment",
+      quantity: 800,
+      unit: "g",
+    });
+    await pantry.addItem({
+      name: "Flour",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "",
+      quantity: 4,
+      unit: "unit",
+    });
+    await pantry.addItem({
+      name: "Sour Cream",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "",
+      quantity: 4,
+      unit: "unit",
+    });
+    await pantry.addItem({
+      name: "Egg",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "",
+      quantity: 4,
+      unit: "unit",
+    });
+    await pantry.addItem({
+      name: "Walnuts",
+      expiry: Number(new Date(2024, 1, 1)),
+      category: "",
+      quantity: 4,
+      unit: "unit",
+    });
+    console.log("reached here");
+    const suggestedRecipes = await pantry.suggestRecipes()
+    expect(suggestedRecipes).toHaveLength(5)
+    suggestedRecipes.forEach(recipe => {
+      expect(recipe).toEqual(
+        expect.objectContaining({
+          recipe_name: expect.any(String),
+          recipe_image_url: expect.any(String),
+          recipe_URL: expect.any(String)
+        })
+      )
+    })
+  }, 70000)
+});

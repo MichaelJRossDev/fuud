@@ -9,7 +9,9 @@ import { set, ref, get, child } from "firebase/database";
 
 import FuzzySearch from "fuzzy-search";
 
-import axios from "axios"
+import axios from "axios";
+
+import { recipes } from "../data/recipes";
 
 export interface PantryItem {
   name: string;
@@ -99,7 +101,6 @@ export const searchPantry = async (
   return searcher.search(searchParameter);
 };
 
-
 export const getItemInfoByBarcode = async (barcode: string) => {
   let item: object = {};
   let quantityJustNumber: string = "";
@@ -132,7 +133,9 @@ export const getItemInfoByBarcode = async (barcode: string) => {
             quantityJustUnit = quantityUnitArray[1];
           }
         }
+
         let category: string = "";
+
         if (itemInfo.data.product.categories_hierarchy) {
           if (itemInfo.data.product.categories_hierarchy[0].includes(":")) {
             let categoryStringArray: Array<string> =
@@ -142,6 +145,7 @@ export const getItemInfoByBarcode = async (barcode: string) => {
             category = itemInfo.data.product.categories_hierarchy[0];
           }
         }
+
         item = {
           name: itemInfo.data.product.product_name
             ? itemInfo.data.product.product_name
@@ -159,16 +163,17 @@ export const getItemInfoByBarcode = async (barcode: string) => {
   return item;
 };
 
-
 export const addToGraveyard = async (id: number) => {
-  
   await get(
     child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + String(id))
   )
     .then((snapshot) => snapshot.val())
     .then(async (data) => {
-      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)), data);
-      
+      await set(
+        ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)),
+        data
+      );
+
       console.log("graveyard item set successfully");
     })
     .catch((err) => {
@@ -180,12 +185,11 @@ export const emptyGraveyard = async () => {
   await set(ref(db, `${auth.currentUser!.uid}/graveyard/`), null);
 };
 
-
 export const getGraveyard = async () => {
   let graveyardItems = {};
   await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/"))
     .then((snapshot) => {
-      return snapshot.val()
+      return snapshot.val();
     })
     .then((data) => {
       graveyardItems = data;
@@ -195,4 +199,35 @@ export const getGraveyard = async () => {
     });
   if (graveyardItems === null) return [];
   return Object.values(graveyardItems);
+};
+
+export const suggestRecipes = async () => {
+  const currentPantry = await getPantry();
+  const recipesWithScores: Array<object> = [];
+  recipes.forEach((recipe: any) => {
+    let score = 0;
+    let ingredients = recipe.ingredients.ingredient.map(
+      (ingredient: any) => ingredient.food_name
+    );
+    currentPantry.forEach((item: any) => {
+      ingredients.forEach((ingredient: any) => {
+        if (!ingredient.toLowerCase().includes(item.toLowerCase)) {
+          score++;
+        }
+      });
+    });
+    recipes.push(recipesWithScores.push({ recipe, score }));
+  });
+  recipesWithScores.sort((a: any, b: any) => b.score - a.score);
+  const recipesShortForm = recipesWithScores.map((recipe: any) => {
+    return {
+      recipe_name: recipe.recipe.recipe_name,
+      recipe_image_url: Array.isArray(recipe.recipe.recipe_images.recipe_image)
+        ? recipe.recipe.recipe_images.recipe_image[0]
+        : recipe.recipe.recipe_images.recipe_image,
+      recipe_URL: recipe.recipe.recipe_url
+    };
+  });
+  if (recipesShortForm.length < 5) return recipesShortForm;
+  return recipesShortForm.slice(0, 5);
 };
