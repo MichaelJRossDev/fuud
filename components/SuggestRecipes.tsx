@@ -4,7 +4,8 @@ import {
     View,
     TouchableOpacity,
     FlatList,
-    Image
+    Image,
+    Linking
   } from "react-native";
 import { useState, useEffect } from "react";  
 import { suggestRecipes } from "../src/pantry"
@@ -39,7 +40,10 @@ export default function SuggestRecipes({ setInRecipes }) {
                     renderItem={({ item }) => {
                         return (
                             <TouchableOpacity
-                            key={item.recipe_name}>
+                            key={item.recipe_name}
+                            onPress={() => {
+                                Linking.openURL(item.recipe_URL)
+                            }}>
                                 <Text>{item.recipe_name}</Text>
                                 <Image source={{uri:item.recipe_image_url}} style={{width:"50%"}}/>
                                 <Text>{item.recipe_image_url}</Text>
