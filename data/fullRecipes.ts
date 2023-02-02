@@ -1,4 +1,4 @@
-{"recipes": [
+const recipes = [
   {
     "cooking_time_min": "30",
     "directions": {
@@ -16189,4 +16189,6 @@
       }
     }
   }
-]}
+]
+
+export { recipes }
