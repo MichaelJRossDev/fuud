@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import Pantry from "./Pantry";
 import Waste from "./Waste"
 import { getPantry, PantryItem } from "../src/pantry";
+import SuggestRecipes from "./SuggestRecipes"
 
 export default function Homepage() {
   const [inPantry, setInPantry] = useState<boolean>(false);
   const [inWaste, setInWaste] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<PantryItem[]>([]);
+  const [inRecipes, setInRecipes] = useState<boolean>(false)
 
 useEffect(() => {
   const getNotifications = async () => {
@@ -29,6 +31,8 @@ useEffect(() => {
     return <Pantry setInPantry={setInPantry} />;
   } else if (inWaste) {
     return <Waste setInWaste={setInWaste}/>
+  } else if (inRecipes) {
+    return <SuggestRecipes setInRecipes={setInRecipes}/>
   }
   return (
     <View style={styles.container}>
@@ -79,6 +83,13 @@ useEffect(() => {
           numColumns={2}
         />
       </View>
+      <TouchableOpacity onPress={() => {
+        setInRecipes(true)
+      }}>
+        <Text>
+          Suggest Recipes
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

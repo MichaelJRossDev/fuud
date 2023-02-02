@@ -1,14 +1,21 @@
-import fs from "fs"
+import FileSystem from "expo-file-system"
 
-let recipeString = ""
-
-
-recipeString = fs.readFileSync("data/fullRecipes.json", "utf8")
-
-let recipes = JSON.parse(recipeString).recipes;
+let recipeString: any;
 
 
+const parseRecipes = async () => {
+    recipeString = await FileSystem.readAsStringAsync("data/fullRecipes.json", "utf8")
+    const recipes = await JSON.parse(recipeString).recipes;
+    console.log(recipes)
+}
+parseRecipes()
 
-export { recipes }
+
+
+
+
+
+
+//export { recipes }
 
 
