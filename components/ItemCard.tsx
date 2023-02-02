@@ -7,6 +7,8 @@ import {
   TextInput,
 } from "react-native";
 import { addToGraveyard, deleteItemById, getPantry } from "../src/pantry";
+import { Button } from "react-native-paper";
+
 
 export default function ItemCard({
   name,
@@ -26,10 +28,6 @@ export default function ItemCard({
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.logo}>fuud.</Text>
-      </View>
-
-      <View style={styles.image}>
-        <Text> {category} Image goes here...</Text>
       </View>
 
       <View style={styles.itemName}>
@@ -61,7 +59,7 @@ export default function ItemCard({
             setInItemCard(false);
           }}
         >
-          <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
+          <Text style={{ fontSize: 15, color: "#34282E", fontWeight: "bold" }}>
             I've eaten this item
           </Text>
         </TouchableOpacity>
@@ -80,27 +78,27 @@ export default function ItemCard({
             setInItemCard(false);
           }}
         >
-          <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
+          <Text style={{ fontSize: 15, color: "#34282E", fontWeight: "bold" }}>
             This item was wasted
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.deleteBtn}>
-          <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
-            Edit
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            setInItemCard(false);
-          }}
-          style={styles.pantryBtn}
-        >
-          <Text style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}>
-            Return to Pantry
-          </Text>
-        </TouchableOpacity>
+        <View>
+          <Button
+            onPress={() => {
+              setInItemCard(false);
+            }}
+            style={styles.homeBtn}
+            icon="cupboard"
+            labelStyle={{ color: "#fff" }}
+          >
+            <Text
+              style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}
+            >
+              Pantry
+            </Text>
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -109,7 +107,7 @@ export default function ItemCard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#95a99c",
+    backgroundColor: "#FBF8DE",
     alignItems: "center",
     flexDirection: "column",
   },
@@ -127,16 +125,9 @@ const styles = StyleSheet.create({
     color: "#d08651",
   },
 
-  image: {
-    marginTop: "5%",
-    borderWidth: 1,
-    height: "20%",
-    width: "60%",
-    backgroundColor: "#fff",
-  },
-
   itemName: {
     marginTop: "5%",
+    color: "#34282E",
   },
 
   itemExpiry: {
@@ -159,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    backgroundColor: "#d08651",
+    backgroundColor: "#95A99C",
   },
 
   binBtn: {
@@ -169,20 +160,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    backgroundColor: "#d08651",
+    backgroundColor: "#95A99C",
   },
 
-  deleteBtn: {
-    width: "40%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    backgroundColor: "#d08651",
-  },
-
-  pantryBtn: {
+  homeBtn: {
     width: "40%",
     borderRadius: 25,
     height: 50,

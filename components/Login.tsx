@@ -6,30 +6,35 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import CreateAcc from "./CreateAcc"
-import { signIn } from "../src/users"
+import CreateAcc from "./CreateAcc";
+import { signIn } from "../src/users";
+import { Button } from "react-native-paper";
+import Header from "./Header";
 
-export default function LogIn({setLoggedIn}) {
+export default function LogIn({ setLoggedIn }) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [createAcc, setCreateAcc] = useState<boolean>(false);
 
-  if(createAcc === true) {
-    return <CreateAcc setCreateAcc={setCreateAcc}/>
+  if (createAcc === true) {
+    return <CreateAcc setCreateAcc={setCreateAcc} />;
   }
   return (
     <View style={styles.container}>
+
+      <Header />
+
       <TextInput
         style={styles.TextInput}
-        placeholder="Email"
-        placeholderTextColor="#f5f6f4"
+        placeholder="Email..."
+        placeholderTextColor="#34282E"
         onChangeText={(email) => setEmail(email)}
       />
 
       <TextInput
         style={styles.TextInput}
-        placeholder="Password"
-        placeholderTextColor="#f5f6f4"
+        placeholder="Password..."
+        placeholderTextColor="#34282E"
         secureTextEntry={true}
         onChangeText={(password) => setPassword(password)}
       />
@@ -38,21 +43,27 @@ export default function LogIn({setLoggedIn}) {
         <Text style={styles.forgot_button}> Forgot Password?</Text>
       </TouchableOpacity>
 
-    
-      <TouchableOpacity onPress={() => {
-        signIn(email, password, setLoggedIn)
-        }} 
-        style={styles.loginBtn}>
-          <Text style={styles.loginText}> Log In</Text>
-          </TouchableOpacity>
+      <Button
+        mode="elevated"
+        onPress={() => {
+          signIn(email, password, setLoggedIn);
+        }}
+        style={styles.loginBtn}
+      >
+        <Text style={styles.loginText}> Log In</Text>
+      </Button>
 
-      <TouchableOpacity onPress={() => {
-       setCreateAcc(true)}} 
-        style={styles.loginBtn}>
-      <Text style={styles.loginText}> Create Account</Text>
-      </TouchableOpacity>
-          </View>
-  ); 
+      <Button
+        mode="elevated"
+        onPress={() => {
+          setCreateAcc(true);
+        }}
+        style={styles.loginBtn}
+      >
+        <Text style={styles.loginText}> Create Account</Text>
+      </Button>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -63,15 +74,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  inputView: {
-    backgroundColor: "#d08651",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
-    alignItems: "center",
-  },
-
   TextInput: {
     width: "70%",
     borderRadius: 20,
@@ -79,28 +81,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    backgroundColor: "#95a99c",
+    backgroundColor: "#F5F6F4",
     textAlign: "center",
   },
 
   loginBtn: {
-    width:"80%",
-    borderRadius:25,
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:40,
-    backgroundColor:"#d08651",
+    width: "50%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    backgroundColor: "#95A99C",
   },
 
   forgot_button: {
     height: 30,
-    marginBottom: 30,
-    color: "#f5f6f4",
+    margin: 15,
+    color: "#F5F6F4",
   },
 
   loginText: {
-    color: "#f5f6f4",
+    color: "#34282E",
+    fontWeight: "bold",
   },
-  
 });
