@@ -4,6 +4,8 @@ import Pantry from "./Pantry";
 import Waste from "./Waste"
 import { getPantry, PantryItem } from "../src/pantry";
 import SuggestRecipes from "./SuggestRecipes"
+import { Button, Card } from "react-native-paper";
+
 
 export default function Homepage() {
   const [inPantry, setInPantry] = useState<boolean>(false);
@@ -39,48 +41,50 @@ useEffect(() => {
       <View style={styles.header}>
         <Text style={styles.logo}>fuud.</Text>
       </View>
-      <View>
-        <Text style={styles.slogan}>Waste Less, Save More, Live More.</Text>
-      </View>
       <View style={styles.nav}>
-        <TouchableOpacity
+        <Button
+          type="elevated"
           style={styles.homeButtons}
           onPress={() => {
             setInPantry(true);
           }}
+          icon="cupboard"
+          labelStyle={{ color: "#fff" }}
         >
           <Text style={styles.homeButtonText}>Pantry</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Button>
+
+        <Button
+          type="elevated"
           style={styles.homeButtons}
           onPress={() => {
             setInWaste(true);
           }}
+          icon="delete"
+          labelStyle={{ color: "#fff" }}
         >
           <Text style={styles.homeButtonText}>Waste</Text>
-        </TouchableOpacity>
+        </Button>
       </View>
 
-      <View style={styles.wasteList}>
+      <View style={styles.notificationsList}>
         <FlatList
           data={notifications}
           renderItem={({ item }) => {
             const expiration = new Date(item.expiry);
             return (
-              <TouchableOpacity style={styles.display} key={item.item_id}>
+              <Card style={styles.display} key={item.item_id}>
                 <View>
-                  <View style={styles.image}>
-                    <Text>Food item category image here</Text>
-                  </View>
                   <Text style={styles.text}>{item.name}</Text>
+                </View>
+                <View>
                   <Text style={styles.text}>
                     {expiration.toLocaleDateString()}
                   </Text>
                 </View>
-              </TouchableOpacity>
+              </Card>
             );
           }}
-          numColumns={2}
         />
       </View>
       <TouchableOpacity onPress={() => {
@@ -97,7 +101,7 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5f6f4",
+    backgroundColor: "#FBF8DE",
     alignItems: "center",
     flexDirection: "column",
   },
@@ -115,13 +119,6 @@ const styles = StyleSheet.create({
     color: "#d08651",
   },
 
-  slogan: {
-    fontSize: 20,
-    fontWeight: "500",
-    color: "#34282e",
-    alignSelf: "baseline",
-  },
-
   nav: {
     display: "flex",
     flexDirection: "row",
@@ -131,52 +128,43 @@ const styles = StyleSheet.create({
   },
 
   homeButtons: {
-    backgroundColor: "#95a99c",
-    padding: 40,
+    backgroundColor: "#D08651",
+    padding: 10,
     marginTop: 20,
     marginLeft: 20,
     marginRight: 20,
-    borderRadius: 25,
+    borderRadius: 15,
   },
 
   homeButtonText: {
-    fontSize: 30,
-    color: "#34282e",
+    fontSize: 20,
+    color: "#F5F6F4",
   },
 
-  notifications: {
-    backgroundColor: "#95a99c",
-    height: "60%",
-    width: "80%",
-    borderRadius: 25,
-  },
-  wasteList: {
+  notificationsList: {
     marginTop: 10,
-    backgroundColor: "#F5f6f4",
+    backgroundColor: "#FBF8DE",
     height: "55%",
     width: "90%",
     borderRadius: 25,
     alignSelf: "center",
     justifyContent: "center",
-    flexDirection: "row",
     display: "flex",
   },
+
   display: {
     borderRadius: 15,
-    width: "45%",
     margin: 10,
-    backgroundColor: "#95a99c",
+    backgroundColor: "#4A6855",
     padding: 5,
-    alignItems: "center",
-  },
-
-  image: {
-    borderWidth: 1,
-    backgroundColor: "#fff",
+    alignSelf: "center",
+    width: "80%",
+    alignContent: "center",
   },
 
   text: {
     fontWeight: "bold",
+    color: "#F5F6F4",
     alignSelf: "center",
   },
 });

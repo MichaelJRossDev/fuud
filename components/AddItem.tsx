@@ -11,6 +11,7 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import ItemAdder from "./ItemAdder";
 import Scanner from "./Scanner";
 import { getPantry, PantryItem } from "../src/pantry";
+import { Button } from "react-native-paper";
 
 export default function AddItem({ setInAddItem,setPantryList }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -48,17 +49,17 @@ export default function AddItem({ setInAddItem,setPantryList }) {
           <Text style={styles.logo}>fuud.</Text>
         </View>
         <View style={styles.addOptions}>
-          <TouchableOpacity
+          <Button
             style={styles.addOptionsBtn}
             onPress={() => {
               setOpenScanner(true);
             }}
+            type="elevated"
+            icon="barcode"
+            labelStyle={{color: "#fff"}}
           >
-            <Text style={styles.addOptionsText}>Barcode</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.addOptionsBtn}>
-            <Text style={styles.addOptionsText}>History</Text>
-          </TouchableOpacity>
+            <Text style={styles.addOptionsText}>Scan</Text>
+          </Button>
         </View>
 
         <View style={styles.addItemInputs}>
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "center",
     margin: 20,
   },
 
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
 
   addOptionsText: {
     fontSize: 15,
-    color: "#34282e",
+    color: "#fff",
   },
 
   addItemInputs: {
@@ -204,6 +205,7 @@ const styles = StyleSheet.create({
 
   addItemText: {
     color: "#f5f6f4",
+    fontWeight: "bold",
   },
 
   cancelBtn: {
@@ -218,6 +220,7 @@ const styles = StyleSheet.create({
 
   cancelText: {
     color: "#f5f6f4",
+    fontWeight: "bold",
   },
 
   picker: {

@@ -10,9 +10,15 @@ import {
 import AddItem from "./AddItem";
 import ItemCard from "./ItemCard";
 import { useState, useEffect } from "react";
-import { addItem, getItemInfoByBarcode, getPantry, PantryItem, searchPantry } from "../src/pantry";
-import {Searchbar} from "react-native-paper"
-
+import {
+  addItem,
+  getItemInfoByBarcode,
+  getPantry,
+  PantryItem,
+  searchPantry,
+} from "../src/pantry";
+import { Searchbar } from "react-native-paper";
+import { Button, Card } from "react-native-paper";
 
 export default function Pantry({ setInPantry }) {
   const [inAddItem, setInAddItem] = useState<boolean>(false);
@@ -20,31 +26,31 @@ export default function Pantry({ setInPantry }) {
   const [inItemCard, setInItemCard] = useState<boolean>(false);
   const [pantryList, setPantryList] = useState<PantryItem[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [returnedList, setReturnedList] = useState<PantryItem[]>([])
-  
-useEffect(() => {
-  const getPantryList = async () => {
-    const pantry: any = await getPantry();
-    setPantryList(pantry);
-    setReturnedList(pantry);
-  }
-  getPantryList();
-}, [inItemCard, inAddItem])
-  
- 
+  const [returnedList, setReturnedList] = useState<PantryItem[]>([]);
+
+  useEffect(() => {
+    const getPantryList = async () => {
+      const pantry: any = await getPantry();
+      setPantryList(pantry);
+      setReturnedList(pantry);
+    };
+    getPantryList();
+  }, [inItemCard, inAddItem]);
 
   useEffect(() => {
     const searchList = async () => {
       const results = await searchPantry(pantryList, searchQuery);
-      setReturnedList(results)
-    }
+      setReturnedList(results);
+    };
     searchList();
-  }, [searchQuery])
+  }, [searchQuery]);
 
-  const onChangeSearch = query => setSearchQuery(query);
-  
+  const onChangeSearch = (query) => setSearchQuery(query);
+
   if (inAddItem) {
-    return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
+    return (
+      <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />
+    );
   } else if (inItemCard) {
     return (
       <ItemCard
@@ -72,23 +78,25 @@ useEffect(() => {
         </View>
 
         <View style={styles.navBar}>
-          <View style={styles.searchBar}> 
-            <Searchbar 
-            placeholder="Search" 
-            value={searchQuery}
-            onChangeText={onChangeSearch}
-            icon="magnify" />
+          <View style={styles.searchBar}>
+            <Searchbar
+              placeholder="Search"
+              value={searchQuery}
+              onChangeText={onChangeSearch}
+              icon="magnify"
+            />
           </View>
 
           <View style={styles.addBtnView}>
-            <TouchableOpacity
+            <Button
+              type="elevated"
               onPress={() => {
                 setInAddItem(true);
               }}
               style={styles.addItemBtn}
             >
-              <Text style={styles.addItemText}> + </Text>
-            </TouchableOpacity>
+              <Text style={styles.addItemText}>+</Text>
+            </Button>
           </View>
         </View>
 
@@ -99,40 +107,41 @@ useEffect(() => {
             renderItem={({ item }) => {
               const expiration = new Date(item.expiry);
               return (
-                <TouchableOpacity
-                  style={styles.display}
-                  key={item.item_id}
-                  onPress={() => {
-                    setItemInfo(item);
-                    setInItemCard(true);
-                  }}
-                >
-                  <View>
-                    <View style={styles.image}>
-                      <Text>Food item category image here</Text>
+                <Card style={styles.display}>
+                  <TouchableOpacity
+                    key={item.item_id}
+                    onPress={() => {
+                      setItemInfo(item);
+                      setInItemCard(true);
+                    }}
+                  >
+                    <View>
+                      <Text style={styles.text}>{item.name}</Text>
+                      <Text style={styles.text}>
+                        {expiration.toLocaleDateString()}
+                      </Text>
                     </View>
-                    <Text style={styles.text}>{item.name}</Text>
-                    <Text style={styles.text}>{expiration.toLocaleDateString()}</Text>
-                  </View>
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                </Card>
               );
             }}
-            numColumns={2}
           />
         </View>
         <View>
-          <TouchableOpacity
+          <Button
             onPress={() => {
               setInPantry(false);
             }}
             style={styles.homeBtn}
+            icon="home"
+            labelStyle={{ color: "#fff" }}
           >
             <Text
               style={{ fontSize: 15, color: "#f5f6f4", fontWeight: "bold" }}
             >
-              Return to Dashboard
+              Dashboard
             </Text>
-          </TouchableOpacity>
+          </Button>
         </View>
       </View>
     );
@@ -142,7 +151,7 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5f6f4",
+    backgroundColor: "#FBF8DE",
     flexDirection: "column",
     alignItems: "center",
   },
@@ -160,10 +169,11 @@ const styles = StyleSheet.create({
     color: "#d08651",
   },
 
-  navBar: { 
+  navBar: {
     alignItems: "flex-start",
     justifyContent: "flex-start",
     flexDirection: "row",
+    marginBottom: 20,
   },
 
   searchBar: {
@@ -175,13 +185,14 @@ const styles = StyleSheet.create({
   },
 
   addBtnView: {
-    alignSelf: "flex-end"
-
+    alignSelf: "flex-end",
+    alignContent: "center",
+    justifyContent: "center",
   },
 
   pantryList: {
     marginTop: 10,
-    backgroundColor: "#F5f6f4",
+    backgroundColor: "#FBF8DE",
     height: "55%",
     width: "90%",
     borderRadius: 25,
@@ -192,17 +203,20 @@ const styles = StyleSheet.create({
   },
 
   addItemBtn: {
+    marginTop: 20,
     borderRadius: 15,
-    height: 50,
-    width: 50,
+    height: 40,
+    width: 40,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#d08651",
+    alignSelf: "center",
   },
 
   addItemText: {
     color: "#f5f6f4",
-    fontSize: 40,
+    fontSize: 20,
+    alignSelf: "center",
   },
 
   homeBtn: {
@@ -217,19 +231,17 @@ const styles = StyleSheet.create({
 
   display: {
     borderRadius: 15,
-    width: "45%",
     margin: 10,
-    backgroundColor: "#95a99c",
+    backgroundColor: "#4A6855",
     padding: 5,
-    alignItems: "center",
+    alignSelf: "center",
+    width: "80%",
+    alignContent: "center",
   },
-  image: {
-    borderWidth: 1,
-    backgroundColor: "#fff",
-  },
-  
+
   text: {
     fontWeight: "bold",
     alignSelf: "center",
+    color: "#F5F6F4",
   },
 });
