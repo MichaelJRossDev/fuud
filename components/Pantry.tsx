@@ -26,12 +26,12 @@ useEffect(() => {
   const getPantryList = async () => {
     const pantry: any = await getPantry();
     setPantryList(pantry);
-    setReturnedList(pantry);    
+    setReturnedList(pantry);
   }
   getPantryList();
 }, [inItemCard, inAddItem])
   
-
+ 
 
   useEffect(() => {
     const searchList = async () => {
