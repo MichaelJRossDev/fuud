@@ -6,8 +6,9 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import { getItemInfoByBarcode } from "../src/pantry";
 
-export default function Scanner({setOpenScanner}) {
+export default function Scanner({setOpenScanner, setName, setQuantity,  setUnit, setShow}) {
     const [hasPermission, setHasPermission] = useState<any>(null);
     const [scanned, setScanned] = useState<boolean>(false);
     
@@ -19,12 +20,17 @@ export default function Scanner({setOpenScanner}) {
       };
       getBarCodeScannerPermissions();
     }, []);
-    const handleBarCodeScanned = ({ type, data }) => {
+    const handleBarCodeScanned = ({ data }) => {
       setScanned(true);
       setOpenScanner(false);
-      console.log(
-        `Bar code with type ${type} and data ${data} has been scanned!`
-      );
+      const getItem = async () => {
+        const barcodeItem = await getItemInfoByBarcode(data);
+        setName(barcodeItem.name)
+        setQuantity(barcodeItem.quantity)
+        setUnit(barcodeItem.unit);
+      }
+      getItem();
+      alert("Set Expiry Date")      
     };
     if (hasPermission === null) {
       return <Text>Requesting for camera permission</Text>;

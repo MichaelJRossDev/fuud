@@ -9,6 +9,8 @@ import { set, ref, get, child } from "firebase/database";
 
 import FuzzySearch from "fuzzy-search";
 
+import axios from "axios"
+
 export interface PantryItem {
   name: string;
   expiry: number;
@@ -53,7 +55,15 @@ export const getPantry = async () => {
     .catch((err) => {
       console.log(err);
     });
-  return Object.values(pantryItems);
+  if (pantryItems === null) return [];
+  const pantryItemsValues = Object.values(pantryItems);
+  const comparisonFunction: any = (a: any, b: any) => {
+    if (a.expiry < b.expiry) return 1;
+    if (a.expiry > b.expiry) return -1;
+    if (a.expiry === b.expiry) return 0;
+  };
+  pantryItemsValues.sort(comparisonFunction);
+  return pantryItemsValues;
 };
 
 export const deleteItemById = async (id: number) => {
@@ -86,20 +96,103 @@ export const searchPantry = async (
   const searcher = new FuzzySearch(pantryArray, ["name", "category"], {
     caseSensitive: false,
   });
-  console.log(searcher.search(searchParameter));
   return searcher.search(searchParameter);
 };
 
+
+export const getItemInfoByBarcode = async (barcode: string) => {
+  let item: object = {};
+  let quantityJustNumber: string = "";
+  let quantityJustUnit: string = "";
+  await axios
+    .get(`https://world.openfoodfacts.org/api/v2/product/${barcode}`)
+    .then((itemInfo: any) => {
+      if (itemInfo.status === "0") {
+        console.log("item not found");
+        return {
+          name: "",
+          category: "",
+          quantity: 0,
+          unit: "",
+        };
+      } else {
+        if (itemInfo.data.product.quantity) {
+          if (itemInfo.data.product.quantity.includes(",")) {
+            const quantityStringArray: Array<string> =
+              itemInfo.data.product.quantity.split(",");
+            const quantityWithUnits: string = quantityStringArray[0];
+            const quantityUnitArray: Array<string> =
+              quantityWithUnits.split(" ");
+            quantityJustNumber = quantityUnitArray[0];
+            quantityJustUnit = quantityUnitArray[1];
+          } else {
+            const quantityUnitArray: Array<string> =
+              itemInfo.data.product.quantity.split(" ");
+            quantityJustNumber = quantityUnitArray[0];
+            quantityJustUnit = quantityUnitArray[1];
+          }
+        }
+        let category: string = "";
+        if (itemInfo.data.product.categories_hierarchy) {
+          if (itemInfo.data.product.categories_hierarchy[0].includes(":")) {
+            let categoryStringArray: Array<string> =
+              itemInfo.data.product.categories_hierarchy[0].split(":");
+            category = categoryStringArray[1];
+          } else {
+            category = itemInfo.data.product.categories_hierarchy[0];
+          }
+        }
+        item = {
+          name: itemInfo.data.product.product_name
+            ? itemInfo.data.product.product_name
+            : "",
+          category: category ? category : "",
+          quantity:
+            quantityJustNumber && !Number.isNaN(Number(quantityJustNumber))
+              ? Number(quantityJustNumber)
+              : 1,
+          unit: quantityJustUnit ? quantityJustUnit : "unit",
+        };
+      }
+    })
+    .catch(console.log);
+  return item;
+};
+
+
 export const addToGraveyard = async (id: number) => {
+  
   await get(
     child(ref(db), `${auth.currentUser!.uid}` + "/pantry/" + String(id))
   )
     .then((snapshot) => snapshot.val())
     .then(async (data) => {
-      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + id), data);
-      await deleteItemById(id)
+      await set(ref(db, `${auth.currentUser!.uid}` + "/graveyard/" + String(id)), data);
+      
+      console.log("graveyard item set successfully");
     })
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const emptyGraveyard = async () => {
+  await set(ref(db, `${auth.currentUser!.uid}/graveyard/`), null);
+};
+
+
+export const getGraveyard = async () => {
+  let graveyardItems = {};
+  await get(child(ref(db), `${auth.currentUser!.uid}` + "/graveyard/"))
+    .then((snapshot) => {
+      return snapshot.val()
+    })
+    .then((data) => {
+      graveyardItems = data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  if (graveyardItems === null) return [];
+  return Object.values(graveyardItems);
 };
