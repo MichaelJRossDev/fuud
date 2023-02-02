@@ -10,7 +10,7 @@ import {
 import AddItem from "./AddItem";
 import ItemCard from "./ItemCard";
 import { useState, useEffect } from "react";
-import { addItem, getPantry, PantryItem, searchPantry } from "../src/pantry";
+import { addItem, getItemInfoByBarcode, getPantry, PantryItem, searchPantry } from "../src/pantry";
 import {Searchbar} from "react-native-paper"
 
 
@@ -41,8 +41,8 @@ useEffect(() => {
     searchList();
   }, [searchQuery])
 
-const onChangeSearch = query => setSearchQuery(query);
-
+  const onChangeSearch = query => setSearchQuery(query);
+  
   if (inAddItem) {
     return <AddItem setInAddItem={setInAddItem} setPantryList={setPantryList} />;
   } else if (inItemCard) {
