@@ -7,7 +7,7 @@ import Homepage from "./components/Homepage";
 
 
 export default function App() {
-   const [loggedIn, setLoggedIn] = useState<boolean>(true);
+   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   if (loggedIn === false) {
     return <LogIn setLoggedIn={setLoggedIn} />;

@@ -16,7 +16,7 @@ import { Button } from "react-native-paper";
 export default function AddItem({ setInAddItem,setPantryList }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [quantity, setQuantity] = useState<number>(0);
+  const [quantity, setQuantity] = useState<any>(0);
   const [unit, setUnit] = useState<string>("");
   const [expiryDate, setExpiryDate] = useState<number>(Number(new Date()));
   const [show, setShow] = useState<boolean>(false);
@@ -87,7 +87,7 @@ export default function AddItem({ setInAddItem,setPantryList }) {
             }}
             placeholder="Weight/quantity"
             style={styles.inputs}
-            value={quantity.toString()}
+            value={quantity}
           />
 
           <TextInput

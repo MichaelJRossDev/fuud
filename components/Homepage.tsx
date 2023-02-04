@@ -87,12 +87,13 @@ useEffect(() => {
           }}
         />
       </View>
-      <TouchableOpacity onPress={() => {
-        setInRecipes(true)
-      }}>
-        <Text>
-          Suggest Recipes
-        </Text>
+      <TouchableOpacity
+        style={styles.recipes}
+        onPress={() => {
+          setInRecipes(true);
+        }}
+      >
+        <Text style={styles.recipesText}>Suggest Recipes</Text>
       </TouchableOpacity>
     </View>
   );
@@ -167,4 +168,17 @@ const styles = StyleSheet.create({
     color: "#F5F6F4",
     alignSelf: "center",
   },
+
+  recipes: {
+    backgroundColor: "#D08651",
+    padding: 15,
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 15,
+  },
+
+  recipesText: {
+    color: "#fff"
+  }
 });
